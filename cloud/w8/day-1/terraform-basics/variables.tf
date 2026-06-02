@@ -1,6 +1,6 @@
 variable "project_name" {
-  description = "Portfolio repository name for Phase 2."
   type        = string
+  description = "Portfolio repository name for Phase 2."
   default     = "minhkhoa-aws-accelerator-p2"
 
   validation {
@@ -10,8 +10,8 @@ variable "project_name" {
 }
 
 variable "environment" {
-  description = "Purpose of the current configuration."
   type        = string
+  description = "Purpose of the current configuration."
   default     = "learning"
 
   validation {
@@ -21,17 +21,27 @@ variable "environment" {
 }
 
 variable "owner" {
-  description = "Owner of this repository."
   type        = string
+  description = "Owner of this repository."
   default     = "MinhKhoa2209"
 }
 
 variable "weekly_topics" {
-  description = "List of topics being studied this week."
   type        = list(string)
+  description = "List of topics being studied this week."
   default = [
     "iac-overview",
     "hcl-syntax",
     "terraform-workflow",
+    "state-management",
+    "modules-and-best-practices",
   ]
+
+  validation {
+    condition = (
+      length(var.weekly_topics) > 0 &&
+      alltrue([for topic in var.weekly_topics : length(trimspace(topic)) > 0])
+    )
+    error_message = "weekly_topics must contain at least one non-empty topic."
+  }
 }

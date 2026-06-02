@@ -14,6 +14,16 @@ output "learning_summary" {
 }
 
 output "recommended_commit_message" {
-  description = "Commit prefix theo announcement."
+  description = "Suggested commit message prefix for the day-1 deliverable."
   value       = "[W8-D1] add terraform foundations"
+}
+
+output "module_learning_checkpoint" {
+  description = "Normalized learning metadata returned by the child module."
+  value       = module.portfolio_summary.learning_checkpoint
+}
+
+output "module_study_recommendations" {
+  description = "Recommended next actions returned by the child module."
+  value       = module.portfolio_summary.study_recommendations
 }

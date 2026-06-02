@@ -1,6 +1,6 @@
 locals {
   repo_layout = {
-    w8       = ["day-a", "day-b", "day-c", "lab"]
+    w8       = ["day-1", "day-2", "day-3", "lab"]
     backlog  = ["w9", "w10"]
     capstone = ["w11", "w12"]
   }
