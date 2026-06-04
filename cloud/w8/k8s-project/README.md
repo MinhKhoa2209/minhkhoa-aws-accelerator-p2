@@ -20,7 +20,7 @@ From repo:
 
 ```powershell
 cd k8s-project
-.\deploy.ps1
+.\scripts\deploy.ps1
 ```
 
 The script runs `terraform init`, `terraform apply -auto-approve`, prints the ALB URL, and waits until `/healthz` returns HTTP 200.
@@ -35,7 +35,7 @@ terraform output -raw alb_url
 
 ```powershell
 cd cloud\w8\k8s-project
-.\destroy.ps1
+.\scripts\destroy.ps1
 ```
 
 The S3 artifact bucket uses `force_destroy = true`, so Terraform can remove staged files during destroy.
@@ -77,8 +77,8 @@ k8s-project/
   modules/             VPC, EC2, security group modules
   main.tf              ALB, EC2 wiring, artifact bucket, IAM, cloud-init
   user_data.sh.tpl     EC2 bootstrap for Docker + minikube + kubectl
-  deploy.ps1           One-click deploy
-  destroy.ps1          Clean destroy
+  scripts/deploy.ps1   One-click deploy
+  scripts/destroy.ps1  Clean destroy
 ```
 
 ## Optional Checks
@@ -135,5 +135,4 @@ evidence/
   terraform-plan-no-changes.png    Re-running Terraform shows the stack is reproducible.
   terraform-destroy-success.png    Terraform destroy completed.
 ```
-
 
