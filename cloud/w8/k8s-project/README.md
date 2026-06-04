@@ -133,7 +133,7 @@ evidence/
   terraform-apply-success.png      One-click deploy completed and health check became ready.
   kubernetes-pods-service.png      App is running as Kubernetes Pods with a NodePort Service.
   terraform-plan-no-changes.png    Re-running Terraform shows the stack is reproducible.
-  terraform-destroy-success.png    Terraform destroy completed after grading/evidence capture.
+  terraform-destroy-success.png    Terraform destroy completed.
 ```
 
-Optional extra evidence: capture `http://<alb-dns>/healthz` returning `ok`. The existing deploy screenshot already proves `/healthz` became healthy, but a dedicated screenshot is useful if the trainer wants direct browser evidence.
+
