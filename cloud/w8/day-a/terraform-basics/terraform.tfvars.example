@@ -1,9 +1,0 @@
-project_name = "minhkhoa-aws-accelerator-p2"
-environment  = "learning"
-owner        = "Minh Khoa"
-
-weekly_topics = [
-  "iac-overview",
-  "hcl-syntax",
-  "terraform-state-preview",
-]

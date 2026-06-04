@@ -91,9 +91,9 @@ Tên repo: `{your-username}-aws-accelerator-p2`
 ```text
 cloud/
   w8/
-    day-a/      # Terraform
-    day-b/      # K8s Container/Orchestration
-    day-c/      # K8s Scaling + Networking
+    day-1/      # Terraform
+    day-2/      # K8s Container/Orchestration
+    day-3/      # K8s Scaling + Networking
     lab/        # minimal K8s platform
     reflection.md
   w9/  w10/

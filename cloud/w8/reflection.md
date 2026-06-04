@@ -58,3 +58,30 @@
 - chay full `plan/apply/destroy` voi provider that o bai sau
 - deploy thu tren minikube de quan sat pod lifecycle, service routing va network policy
 - mo rong sang scaling/networking va lab platform cho W8-D3/T5-T6
+
+## W8-D3 — 03/06/2026
+
+### Muc tieu
+
+- ket noi manifest Kubernetes cua W8-D2 voi bai hoc scaling va networking
+- chuan bi laptop va local cluster cho onsite minikube lab
+- bo sung ghi chu thao tac de co the show evidence ro rang trong portfolio
+
+### Evidence da hoan thanh
+
+- hoan thien note `cloud/w8/day-3/README.md` ve scaling, service discovery, network policy va local setup
+- chuan hoa cau truc W8 ve duy nhat `day-1`, `day-2`, `day-3`
+- bo sung checklist command de deploy, scale, inspect endpoint va smoke test tren minikube
+
+### Dieu da hoc
+
+- `Deployment` scale theo desired replica count, nhung traffic chi nen vao cac pod da `Ready`
+- `Service` la endpoint on dinh, con pod IP la tam thoi va co the thay doi sau moi lan recreate
+- `EndpointSlice` la cach tot de nhin service dang route toi nhung pod nao
+- network policy khong thay the service; no bo sung lop kiem soat traffic giua cac workload
+
+### Khoang trong can hoc tiep
+
+- tu chay lai full flow tren minikube de xac nhan image load, rollout va DNS hoat dong on dinh
+- thu `metrics-server` va HPA sau khi manual scaling da ro
+- mo rong tu app don le thanh mini platform trong thu muc `cloud/w8/lab/`

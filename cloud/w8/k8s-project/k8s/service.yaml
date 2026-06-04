@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-project-web
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: k8s-project-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      nodePort: 30080

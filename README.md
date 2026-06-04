@@ -13,6 +13,7 @@ W8 dang tap trung vao:
 
 ```text
 cloud/
+  docs/        # notes tom luoc tu tai lieu chinh thong W8
   w8/
     day-1/      # Terraform foundations
     day-2/      # K8s Container/Orchestration
@@ -31,6 +32,8 @@ capstone/
 - ghi chu Terraform tai `cloud/w8/day-1/README.md`
 - sandbox Terraform tai `cloud/w8/day-1/terraform-basics/`
 - ghi chu Kubernetes tai `cloud/w8/day-2/README.md`
+- ghi chu scaling/networking tai `cloud/w8/day-3/README.md`
+- note tong hop tai lieu chinh thong tai `cloud/docs/`
 - reflection/checkpoint tai `cloud/w8/reflection.md`
 
 ## Tham chiếu

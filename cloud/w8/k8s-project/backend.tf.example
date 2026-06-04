@@ -1,0 +1,9 @@
+terraform {
+  backend "s3" {
+    bucket         = "replace-with-your-terraform-state-bucket"
+    key            = "w8/k8s-project/terraform.tfstate"
+    region         = "ap-southeast-1"
+    dynamodb_table = "replace-with-your-terraform-lock-table"
+    encrypt        = true
+  }
+}
