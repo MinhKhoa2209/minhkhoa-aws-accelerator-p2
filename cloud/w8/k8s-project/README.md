@@ -10,7 +10,7 @@ This project builds a one-node Kubernetes lab on AWS:
 ## Prerequisites
 
 - AWS CLI credentials configured for an IAM user/role that can create EC2, VPC, ALB, IAM, and S3 resources.
-- Terraform installed.
+- Terraform `1.15.5` or newer installed.
 - PowerShell available for the provided deploy and destroy scripts.
 - Optional local checks: Node.js, npm, Docker, and kubectl.
 
@@ -24,6 +24,8 @@ cd k8s-project
 ```
 
 The script runs `terraform init`, `terraform apply -auto-approve`, prints the ALB URL, and waits until `/healthz` returns HTTP 200.
+
+This project uses the S3 backend `use_lockfile` setting, so Terraform `1.15.5` or newer is required.
 
 Open the final URL in a browser:
 
@@ -79,6 +81,8 @@ k8s-project/
   user_data.sh.tpl     EC2 bootstrap for Docker + minikube + kubectl
   scripts/deploy.ps1   One-click deploy
   scripts/destroy.ps1  Clean destroy
+  PROJECT_FLOW.md      Detailed end-to-end technical walkthrough
+  MENTOR_QUESTIONS.md  Focused mentor review questions and short answers
   PRESENTATION_SCRIPT.md  Presentation script and mentor Q&A
 ```
 
