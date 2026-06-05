@@ -79,6 +79,7 @@ k8s-project/
   user_data.sh.tpl     EC2 bootstrap for Docker + minikube + kubectl
   scripts/deploy.ps1   One-click deploy
   scripts/destroy.ps1  Clean destroy
+  PRESENTATION_SCRIPT.md  Presentation script and mentor Q&A
 ```
 
 ## Optional Checks
@@ -135,4 +136,3 @@ evidence/
   terraform-plan-no-changes.png    Re-running Terraform shows the stack is reproducible.
   terraform-destroy-success.png    Terraform destroy completed.
 ```
-
