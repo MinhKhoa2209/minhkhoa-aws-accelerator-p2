@@ -26,23 +26,6 @@ lab-terraform/
   terraform.tfvars.example    Example variable values
 ```
 
-## GitHub Safety
-
-Do not commit generated Terraform runtime files or personal configuration:
-
-- `terraform.tfvars`
-- `terraform.tfstate`
-- `terraform.tfstate.backup`
-- `.terraform/`
-- `backend.tf`
-
-The repo `.gitignore` excludes these files. Commit `terraform.tfvars.example`, `backend.tf.example`, and `.terraform.lock.hcl`.
-
-## Prerequisites
-
-- AWS CLI credentials configured
-- Terraform installed
-- An AWS account with permission to create VPC, EC2, RDS, S3, and DynamoDB resources
 
 ## Step 1: Create the Remote Backend
 
@@ -136,14 +119,3 @@ terraform destroy
 - Step 5 Security groups: `modules/security_groups`
 - Remote state: `backend.tf.example` plus `bootstrap-backend`
 
-## Suggested Evidence
-
-- `terraform apply` success with outputs
-- Browser opened to `terraform output -raw web_url`
-- EC2 instance running in the public subnet
-- RDS MySQL status `Available` and `Publicly accessible: No`
-- Public/private subnets in two Availability Zones
-- Security group rules for HTTP and MySQL
-- S3 assets bucket with `static/index.html`
-- S3 backend bucket and DynamoDB lock table
-- `terraform plan` showing no changes after apply
