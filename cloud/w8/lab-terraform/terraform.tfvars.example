@@ -1,0 +1,15 @@
+aws_region  = "ap-southeast-1"
+environment = "dev"
+owner       = "Minh Khoa"
+
+allowed_http_cidrs = ["0.0.0.0/0"]
+allowed_ssh_cidrs  = []
+key_name           = ""
+root_volume_size   = 30
+
+db_name     = "appdb"
+db_username = "appadmin"
+db_password = "ChangeMe123!"
+
+# Leave empty to let Terraform generate a globally unique bucket suffix.
+assets_bucket_name = ""
