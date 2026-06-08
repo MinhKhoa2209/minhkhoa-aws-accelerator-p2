@@ -5,14 +5,84 @@ backend.tf
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
+*.tfplan
+*.tfplan.*
+tfplan
+tfplan.*
+plan.out
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
 crash.log
 crash.*.log
 .terraform.tfstate.lock.info
+.terragrunt-cache/
+
+# Local secrets / credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+credentials
+credentials.*
+*.credentials
+.aws/
+.kube/
+kubeconfig
+kubeconfig.*
+*kubeconfig*
+*.local.yaml
+*.local.yml
+secret.local.yaml
+secret.local.yml
 
 # OS / editor noise
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+**/out/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+**/coverage/
+.cache/
+**/.cache/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker / packaging artifacts
+.docker/
+*.tar
+*.tgz
+*.zip
