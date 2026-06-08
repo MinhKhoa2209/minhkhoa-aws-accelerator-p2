@@ -27,6 +27,26 @@ cloud/w9/
 3. Complete `day-c`: replace a plain Deployment with an Argo Rollout and Prometheus analysis.
 4. Complete `lab`: GitOps-ify the W8 app, bolt on observability, and prove canary abort behavior.
 
+## Lab Helper
+
+Use the helper script to run the W9 lab workflow consistently:
+
+```powershell
+.\cloud\w9\scripts\run-gitops-lab.ps1
+```
+
+Useful modes:
+
+```powershell
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode validate
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode deps
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode sync
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode status
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode argo-ui
+```
+
+Evidence notes live in `cloud/w9/lab/evidence/`.
+
 ## Study Docs
 
 Use `cloud/docs/w9/` for the full W9 tasklist and theory notes:

@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: observability
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    rule_files:
+      - /etc/prometheus/rules/*.yml
+
+    scrape_configs:
+      - job_name: announcement-app
+        metrics_path: /metrics
+        static_configs:
+          - targets:
+              - announcement-service.w8-day-2.svc.cluster.local:80
+            labels:
+              service_name: announcement-app
+
+  slo-rules.yml: |
+    groups:
+      - name: w8-service.slo
+        rules:
+          - alert: W8ServiceFastBurn
+            expr: |
+              (
+                1 - (
+                  sum(rate(http_server_requests_total{service_name="announcement-app",status_code=~"2.."}[5m]))
+                  /
+                  sum(rate(http_server_requests_total{service_name="announcement-app"}[5m]))
+                )
+              ) > (14.4 * 0.01)
+              and
+              (
+                1 - (
+                  sum(rate(http_server_requests_total{service_name="announcement-app",status_code=~"2.."}[1h]))
+                  /
+                  sum(rate(http_server_requests_total{service_name="announcement-app"}[1h]))
+                )
+              ) > (14.4 * 0.01)
+            for: 2m
+            labels:
+              severity: page
+              slo: availability
+            annotations:
+              summary: W8 service is burning availability error budget quickly.
+              description: Fast burn alert uses 5m and 1h windows against a 99 percent SLO.
+
+          - alert: W8ServiceSlowBurn
+            expr: |
+              (
+                1 - (
+                  sum(rate(http_server_requests_total{service_name="announcement-app",status_code=~"2.."}[30m]))
+                  /
+                  sum(rate(http_server_requests_total{service_name="announcement-app"}[30m]))
+                )
+              ) > (6 * 0.01)
+              and
+              (
+                1 - (
+                  sum(rate(http_server_requests_total{service_name="announcement-app",status_code=~"2.."}[6h]))
+                  /
+                  sum(rate(http_server_requests_total{service_name="announcement-app"}[6h]))
+                )
+              ) > (6 * 0.01)
+            for: 15m
+            labels:
+              severity: ticket
+              slo: availability
+            annotations:
+              summary: W8 service has sustained availability error-budget burn.
+              description: Slow burn alert uses 30m and 6h windows against a 99 percent SLO.

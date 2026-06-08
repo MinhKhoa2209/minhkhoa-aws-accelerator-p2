@@ -18,9 +18,12 @@
 - Availability and latency are the first SLIs for this app.
 - Burn-rate alerts are more useful than simple error thresholds because they connect symptoms to error budget.
 - Metrics need consistent labels before dashboards and alerts become reliable.
+- The app now exposes Prometheus-compatible request metrics at `/metrics`, which makes the SLO rules and canary analysis measurable instead of only declarative.
+- The lab includes a minimal Prometheus service named `prometheus-operated` so Argo Rollouts can query the same address used by the `AnalysisTemplate`.
 
 ## Canary Notes
 
 - Canary rollout is useful only when the analysis metric reflects user impact.
 - Auto-abort protects the stable version when the canary fails the metric threshold.
 - The lab should show both a normal promotion path and a failed canary path.
+- The normal rollout path is Git commit and Argo CD sync. Direct `kubectl apply` is only for dependency bootstrap or emergency recovery notes, not for desired-state app changes.

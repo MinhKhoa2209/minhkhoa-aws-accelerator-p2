@@ -25,7 +25,15 @@ day-c/
 ```powershell
 kubectl create namespace argo-rollouts
 kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+kubectl wait --for=condition=Established crd/rollouts.argoproj.io --timeout=180s
+kubectl wait --for=condition=Established crd/analysistemplates.argoproj.io --timeout=180s
 kubectl wait --for=condition=available deployment/argo-rollouts -n argo-rollouts --timeout=180s
+```
+
+The helper script runs this as part of dependency bootstrap:
+
+```powershell
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode deps
 ```
 
 ## Apply Example

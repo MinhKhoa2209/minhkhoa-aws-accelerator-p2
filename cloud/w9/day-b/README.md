@@ -31,6 +31,36 @@ day-b/
   grafana/w8-service-dashboard.json
 ```
 
+## Install PrometheusRule CRD
+
+The lab overlay uses `kind: PrometheusRule`, which is provided by the Prometheus Operator CRDs. Install the CRDs before expecting the Argo CD `w9-observability` app to sync successfully:
+
+```powershell
+kubectl apply -f https://github.com/prometheus-operator/prometheus-operator/releases/latest/download/stripped-down-crds.yaml
+kubectl wait --for=condition=Established crd/prometheusrules.monitoring.coreos.com --timeout=180s
+```
+
+The helper script runs this as part of dependency bootstrap:
+
+```powershell
+.\cloud\w9\scripts\run-gitops-lab.ps1 -Mode deps
+```
+
+## Lab Prometheus
+
+The lab overlay includes a minimal Prometheus deployment in `cloud/w9/lab/observability`:
+
+- `prometheus-config.yaml` defines scrape config for `announcement-service.w8-day-2.svc.cluster.local:80/metrics`.
+- `prometheus.yaml` creates a Prometheus deployment and `prometheus-operated` service on port `9090`.
+- `slo-burn-rate-rules.yaml` keeps the Prometheus Operator `PrometheusRule` form for compatibility with operator-based stacks.
+
+The W8 app exports Prometheus-compatible metrics at `/metrics`, including:
+
+- `http_server_requests_total`
+- `http_server_request_duration_seconds_bucket`
+- `http_server_request_duration_seconds_sum`
+- `http_server_request_duration_seconds_count`
+
 ## Notes
 
 The alert queries assume standard HTTP request metrics named `http_server_request_duration_seconds_bucket` and `http_server_requests_total`. If the app exposes different metric names, update the PromQL labels and metric names before using the rules.

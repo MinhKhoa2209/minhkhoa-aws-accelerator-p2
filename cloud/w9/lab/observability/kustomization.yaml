@@ -4,4 +4,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - collector-config.yaml
+  - prometheus-config.yaml
+  - prometheus.yaml
   - slo-burn-rate-rules.yaml
