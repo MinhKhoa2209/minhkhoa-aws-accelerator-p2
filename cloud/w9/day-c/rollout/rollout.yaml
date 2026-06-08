@@ -11,6 +11,8 @@ spec:
       app.kubernetes.io/name: announcement-app
   template:
     metadata:
+      annotations:
+        gitops-lab/retry-reason: analysis-template-empty-result-fix-2026-06-08
       labels:
         app.kubernetes.io/name: announcement-app
     spec:

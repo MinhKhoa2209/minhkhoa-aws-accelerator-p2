@@ -17,6 +17,9 @@ spec:
         prometheus:
           address: http://prometheus-operated.observability.svc.cluster.local:9090
           query: |
-            sum(rate(http_server_requests_total{service_name="{{args.service-name}}",status_code=~"2.."}[1m]))
-            /
-            sum(rate(http_server_requests_total{service_name="{{args.service-name}}"}[1m]))
+            (
+              sum(rate(http_server_requests_total{service_name="{{args.service-name}}",status_code=~"2.."}[5m]))
+              /
+              sum(rate(http_server_requests_total{service_name="{{args.service-name}}"}[5m]))
+            )
+            or on() vector(1)
