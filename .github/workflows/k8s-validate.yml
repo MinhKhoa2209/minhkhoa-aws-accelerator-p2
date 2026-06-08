@@ -1,0 +1,35 @@
+name: k8s-validate
+
+on:
+  pull_request:
+    paths:
+      - "cloud/w8/**"
+      - "cloud/w9/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "cloud/w8/**"
+      - "cloud/w9/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Render W8 baseline
+        run: kubectl kustomize cloud/w8/day-2/manifests >/tmp/w8.yaml
+
+      - name: Render W9 platform
+        run: kubectl kustomize cloud/w9/lab/platform >/tmp/w9-platform.yaml
+
+      - name: Render W9 observability
+        run: kubectl kustomize cloud/w9/lab/observability >/tmp/w9-observability.yaml
+
+      - name: Render W9 rollout
+        run: kubectl kustomize cloud/w9/lab/rollout >/tmp/w9-rollout.yaml

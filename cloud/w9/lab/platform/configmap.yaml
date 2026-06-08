@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: announcement-app-config
+data:
+  APP_NAME: "announcement-app"
+  APP_OWNER: "Minh Khoa"
+  APP_ENV: "learning"
+  APP_MESSAGE: "Week 9 GitOps-managed service is running on Kubernetes."

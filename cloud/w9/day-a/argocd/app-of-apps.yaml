@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: w9-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/MinhKhoa2209/minhkhoa-aws-accelerator-p2.git
+    targetRevision: HEAD
+    path: cloud/w9/day-a/argocd
+    directory:
+      recurse: false
+      include: "{w8-platform-app.yaml,w9-observability-app.yaml,w9-rollout-app.yaml}"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
