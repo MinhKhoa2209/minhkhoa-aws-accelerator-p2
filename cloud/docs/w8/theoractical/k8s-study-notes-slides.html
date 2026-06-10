@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kubernetes — Tổng Hợp & Giải Sâu</title>
+    
+    <!-- Google Fonts Import -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Brand palette */
+            --brand-orange: #fe7624;
+            --brand-orange-light: #f59120;
+            --brand-amber: #fbae42;
+            --brand-amber-mid: #fdc57a;
+            --brand-yellow: #fcd554;
+            --brand-navy: #1e293b;
+            --brand-navy-mid: #24338a;
+            --brand-blue: #007bc1;
+            --brand-cyan: #00b3d9;
+            --brand-blue-bright: #0283e5;
+
+            /* Text */
+            --text-primary: #1a1a1a;
+            --text-secondary: #4d4e4e;
+            --text-muted: #698695;
+            --border: #c4d5dd;
+            --border-light: #ebebeb;
+
+            /* Surfaces */
+            --surface-white: #ffffff;
+            --surface-100: #fafafa;
+            --surface-card: #f9fafb;
+            --surface-warm: #f0eeed;
+            --surface-blue: #e3f0f7;
+            --surface-tint: #fff7ec;
+
+            /* Typography */
+            --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+            /* Fluid type scale */
+            --title-size:  clamp(2rem, 5.5vw, 4.25rem);
+            --h2-size:     clamp(1.5rem, 3.5vw, 2.5rem);
+            --h3-size:     clamp(1.1rem, 2.2vw, 1.6rem);
+            --body-size:   clamp(0.8rem, 1.15vw, 1.05rem);
+            --small-size:  clamp(0.7rem, 0.9vw, 0.85rem);
+            --mono-size:   clamp(0.65rem, 0.9vw, 0.85rem);
+
+            /* Spacing */
+            --slide-padding: clamp(1.5rem, 4vw, 4rem);
+            --content-gap:   clamp(0.75rem, 1.8vw, 1.8rem);
+            --element-gap:   clamp(0.4rem, 1vw, 1rem);
+
+            /* Shape */
+            --radius-sm:   10px;
+            --radius-md:   16px;
+            --radius-lg:   20px;
+            --radius-xl:   32px;
+            --radius-pill: 80px;
+
+            /* Shadow */
+            --shadow-card: 0 8px 17px rgba(29, 29, 29, 0.05);
+            --shadow-lg:   0 20px 40px rgba(30, 41, 59, 0.12);
+
+            /* Gradients */
+            --gradient-cta:  linear-gradient(135deg, #ffc078 0%, #ff8800 100%);
+            --gradient-warm: linear-gradient(135deg, #fcd554 0%, #fe7624 60%, #f59120 100%);
+            --gradient-cool: linear-gradient(135deg, #007bc1 0%, #24338a 100%);
+
+            /* Animation */
+            --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.65s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            overflow-x: hidden;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background: var(--surface-100);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Slide Container */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: var(--slide-padding);
+            background: var(--surface-white);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            gap: var(--content-gap);
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .slide-content-body {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.5vw, 1.5rem);
+        }
+
+        .slide-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .slide-header h2 {
+            font-size: var(--h2-size);
+            color: var(--brand-navy);
+            line-height: 1.1;
+        }
+
+        .slide-header .lead {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            max-width: 900px;
+            line-height: 1.5;
+        }
+
+        /* ------------------ Slide Types ------------------ */
+
+        /* A. Title Slide */
+        .slide-title {
+            background:
+                radial-gradient(ellipse at 85% 10%, #fcd55466 0%, transparent 55%),
+                radial-gradient(ellipse at 10% 90%, #fe762422 0%, transparent 60%),
+                var(--surface-white);
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .slide-title .title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 2vw, 1.8rem);
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-title h1 {
+            font-size: clamp(2.5rem, 6.5vw, 5rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            color: var(--brand-navy);
+        }
+
+        .slide-title h1 .gradient-text {
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .slide-title .lead {
+            font-size: clamp(1rem, 1.8vw, 1.4rem);
+            color: var(--text-secondary);
+            max-width: 780px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .slide-title .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
+            align-items: center;
+            margin-top: clamp(0.5rem, 1vw, 1rem);
+        }
+
+        .slide-title .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6em;
+            padding: 10px 22px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
+            background: var(--surface-white);
+            font-weight: 600;
+            font-size: var(--small-size);
+            color: var(--brand-navy);
+            box-shadow: var(--shadow-card);
+        }
+
+        .slide-title .meta-chip .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand-orange);
+        }
+
+        .slide-title .meta-chip.primary {
+            background: var(--gradient-cta);
+            color: #ffffff;
+            border-color: transparent;
+        }
+
+        .slide-title .meta-chip.primary .dot {
+            background: #ffffff;
+        }
+
+        .brand-mark {
+            position: absolute;
+            top: var(--slide-padding);
+            left: var(--slide-padding);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            color: var(--brand-navy);
+            font-size: clamp(0.8rem, 1.1vw, 1rem);
+            letter-spacing: -0.01em;
+            z-index: 2;
+        }
+
+        .brand-mark .logo-shape {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--gradient-cta);
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .brand-mark small {
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        /* B. Section Divider Slide */
+        .slide-divider {
+            background: var(--brand-navy);
+            color: #ffffff;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .slide-divider::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 80% 30%, #fe762433 0%, transparent 55%),
+                radial-gradient(ellipse at 10% 80%, #00b3d922 0%, transparent 55%);
+            z-index: 0;
+        }
+
+        .slide-divider .divider-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .slide-divider .section-num {
+            font-size: clamp(6rem, 18vw, 12rem);
+            font-weight: 800;
+            line-height: 0.85;
+            color: transparent;
+            -webkit-text-stroke: 2px #fe7624;
+            letter-spacing: -0.05em;
+        }
+
+        .slide-divider h2 {
+            font-size: clamp(2.25rem, 5.5vw, 4rem);
+            color: #ffffff;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            max-width: 1000px;
+        }
+
+        .slide-divider h2 .accent {
+            color: var(--brand-amber);
+        }
+
+        .slide-divider .divider-sub {
+            font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+            color: #c4d5dd;
+            max-width: 700px;
+            line-height: 1.5;
+        }
+
+        .slide-divider .divider-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: var(--small-size);
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--brand-amber);
+        }
+
+        .slide-divider .divider-label::before {
+            content: "";
+            width: 32px;
+            height: 2px;
+            background: var(--brand-amber);
+        }
+
+        /* C. Closing Slide */
+        .slide-closing {
+            background:
+                radial-gradient(ellipse at 70% 80%, #fe762422 0%, transparent 55%),
+                radial-gradient(ellipse at 20% 20%, #fcd55433 0%, transparent 55%),
+                var(--surface-white);
+            justify-content: center;
+        }
+
+        .slide-closing .closing-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.8vw, 1.8rem);
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-closing h1 {
+            font-size: clamp(2rem, 5.5vw, 4.5rem);
+            color: var(--brand-navy);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .slide-closing h1 .gradient-text {
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ------------------ UI Components ------------------ */
+
+        /* Eyebrow Label */
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: var(--small-size);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--brand-orange);
+            padding: 6px 14px;
+            background: #ffd6a233;
+            border-radius: var(--radius-pill);
+            align-self: flex-start;
+        }
+
+        .eyebrow .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--brand-orange);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: clamp(0.85rem, 1.4vw, 1.4rem);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.3rem, 0.8vw, 0.7rem);
+            min-width: 0;
+        }
+
+        .card .card-title {
+            font-weight: 700;
+            font-size: var(--body-size);
+            color: var(--brand-navy);
+        }
+
+        .card .card-val {
+            font-size: var(--h3-size);
+            font-weight: 800;
+            color: var(--brand-orange);
+        }
+
+        .card .card-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .card-accent {
+            border: 1px solid var(--brand-orange-light);
+            background: linear-gradient(180deg, #ffffff 0%, #fff7ec 100%);
+        }
+
+        .card-dark {
+            background: var(--brand-navy);
+            border: 1px solid var(--brand-navy);
+            color: #ffffff;
+        }
+
+        .card-dark .card-title {
+            color: #ffffff;
+        }
+
+        .card-dark .card-body {
+            color: #c4d5dd;
+            font-size: var(--small-size);
+            line-height: 1.5;
+        }
+
+        /* Badges / Tags */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: var(--small-size);
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            background: var(--surface-blue);
+            color: var(--brand-blue);
+            letter-spacing: 0.04em;
+        }
+
+        .badge-amber {
+            background: #ffd6a233;
+            color: var(--brand-orange);
+        }
+
+        .badge-green {
+            background: #92c83e22;
+            color: #00ac4e;
+        }
+
+        .badge-purple {
+            background: #85439a22;
+            color: #85439a;
+        }
+
+        .badge-cyan {
+            background: #00b3d922;
+            color: #007a99;
+        }
+
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            gap: clamp(0.75rem, 1.2vw, 1.25rem);
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 2vw, 2rem);
+            align-items: stretch;
+        }
+
+        /* Flow / Pipeline Steps */
+        .flow {
+            display: flex;
+            align-items: stretch;
+            gap: clamp(0.4rem, 0.8vw, 0.8rem);
+            flex-wrap: nowrap;
+            justify-content: stretch;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 0;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: clamp(0.5rem, 1vw, 1rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .flow-step .flow-num {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--brand-orange);
+            font-weight: 700;
+        }
+
+        .flow-step .flow-title {
+            font-size: var(--body-size);
+            font-weight: 700;
+            color: var(--brand-navy);
+        }
+
+        .flow-step .flow-body {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            color: var(--brand-orange);
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Stat Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.75rem, 1.5vw, 1.5rem);
+        }
+
+        .stat {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: clamp(1rem, 1.8vw, 1.8rem);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .stat.featured {
+            background: var(--brand-navy);
+            border-color: var(--brand-navy);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat.featured::after {
+            content: "";
+            position: absolute;
+            inset: auto -20% -40% auto;
+            width: 80%;
+            height: 80%;
+            background: var(--gradient-cta);
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.35;
+        }
+
+        .stat .big-num {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat.featured .big-num {
+            background: var(--gradient-cta);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat .stat-label {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .stat.featured .stat-label {
+            color: #c4d5dd;
+        }
+
+        .stat .stat-body {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .stat.featured .stat-body {
+            color: #ffffff;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--small-size);
+            background: var(--surface-white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        th, td {
+            padding: clamp(0.5rem, 0.9vw, 0.85rem) clamp(0.6rem, 1.2vw, 1.1rem);
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: top;
+        }
+
+        th {
+            background: var(--brand-navy);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: var(--small-size);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--surface-card);
+        }
+
+        tbody tr:hover {
+            background: #fff7ec;
+        }
+
+        td strong {
+            color: var(--brand-navy);
+            font-weight: 700;
+        }
+
+        /* Code Blocks & Inline Code */
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            background: rgba(30, 41, 59, 0.07);
+            color: var(--brand-navy);
+            padding: 1px 6px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .card-dark code {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--brand-amber);
+        }
+
+        .code-block {
+            background: var(--brand-navy);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: clamp(0.8rem, 1.2vw, 1.2rem);
+            font-family: var(--font-mono);
+            font-size: var(--mono-size);
+            color: #e2e8f0;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+            box-shadow: var(--shadow-card);
+        }
+
+        .code-block .cmt { color: #64748b; }
+        .code-block .kw  { color: #ff8800; font-weight: bold; }
+        .code-block .str { color: #34d399; }
+        .code-block .fn  { color: #60a5fa; }
+        .code-block .val { color: #f472b6; }
+
+        /* Bullet List */
+        .bullets {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 0.9vw, 0.8rem);
+            list-style: none;
+        }
+
+        .bullets li {
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+            font-size: var(--body-size);
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .bullets li::before {
+            content: "";
+            flex-shrink: 0;
+            width: 8px;
+            height: 8px;
+            margin-top: 0.55em;
+            border-radius: 2px;
+            background: var(--gradient-warm);
+        }
+
+        .bullets li strong {
+            color: var(--brand-navy);
+            font-weight: 700;
+        }
+
+        /* Definition List */
+        .def-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.7rem, 1vw, 1rem);
+        }
+
+        .def-row {
+            display: grid;
+            grid-template-columns: minmax(130px, 180px) minmax(0, 1fr);
+            gap: clamp(0.75rem, 1vw, 1rem);
+            align-items: start;
+            padding-top: 0.1rem;
+        }
+
+        .def-row + .def-row {
+            border-top: 1px solid var(--border-light);
+            padding-top: clamp(0.65rem, 0.9vw, 0.9rem);
+        }
+
+        .def-term {
+            font-size: var(--body-size);
+            font-weight: 800;
+            color: var(--brand-navy);
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+            word-break: break-all;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .def-term::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.45em;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: var(--gradient-warm);
+        }
+
+        .def-desc {
+            min-width: 0;
+            font-size: var(--body-size);
+            line-height: 1.45;
+            color: var(--text-primary);
+        }
+
+        /* Decision Matrix component */
+        .decision {
+            background: var(--surface-white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .decision-header {
+            padding: 12px 16px;
+            background: var(--brand-navy);
+            font-size: var(--small-size);
+            font-weight: 700;
+            color: var(--brand-amber);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .decision-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .decision-row:last-child {
+            border-bottom: none;
+        }
+
+        .decision-cond {
+            padding: 12px 16px;
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            border-right: 1px solid var(--border-light);
+        }
+
+        .decision-result {
+            padding: 12px 16px;
+            font-size: var(--body-size);
+            font-weight: 700;
+            color: var(--brand-orange);
+            white-space: nowrap;
+            background: var(--surface-tint);
+        }
+
+        /* Stepper Component */
+        .stepper {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 16px;
+        }
+
+        .step-line {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 32px;
+            flex-shrink: 0;
+        }
+
+        .step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gradient-warm);
+            color: #ffffff;
+            font-size: var(--small-size);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-connector {
+            width: 2px;
+            flex: 1;
+            min-height: 24px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        .step-content {
+            padding-bottom: 18px;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: var(--body-size);
+            color: var(--brand-navy);
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .step-item:last-child .step-connector {
+            display: none;
+        }
+
+        /* Callout boxes */
+        .callout {
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            font-size: var(--small-size);
+            border-left: 4px solid;
+        }
+
+        .callout p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .callout-red {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+
+        .callout-amber {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: var(--brand-orange);
+            color: #78350f;
+        }
+
+        .callout-blue {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--brand-blue);
+            color: #1e3a5f;
+        }
+
+        .callout-green {
+            background: rgba(34, 197, 94, 0.08);
+            border-color: #22c55e;
+            color: #14532d;
+        }
+
+        /* ------------------ Navigation & Progress ------------------ */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-cta);
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.75rem, 1.5vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 999;
+        }
+
+        .nav-dots button {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-dots button.active {
+            background: var(--brand-orange);
+            border-color: var(--brand-orange);
+            transform: scale(1.35);
+        }
+
+        .nav-dots button:hover {
+            border-color: var(--brand-orange);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: clamp(0.75rem, 1.5vw, 1.5rem);
+            right: clamp(0.75rem, 1.5vw, 1.5rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            background: var(--surface-white);
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
+            z-index: 999;
+        }
+
+        .slide-counter strong {
+            color: var(--brand-orange);
+            font-weight: 700;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: calc(var(--slide-padding) * 0.4);
+            left: var(--slide-padding);
+            right: var(--slide-padding);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .slide-footer .section-tag {
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--brand-navy);
+        }
+
+        .slide-footer .trainer-tag {
+            color: var(--brand-orange);
+            font-weight: 600;
+        }
+
+        /* ------------------ Animation System ------------------ */
+
+        /* Reveal — single element */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition:
+                opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide.visible .reveal:nth-child(1) { transition-delay: 0.08s; }
+        .slide.visible .reveal:nth-child(2) { transition-delay: 0.16s; }
+        .slide.visible .reveal:nth-child(3) { transition-delay: 0.24s; }
+        .slide.visible .reveal:nth-child(4) { transition-delay: 0.32s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.40s; }
+        .slide.visible .reveal:nth-child(6) { transition-delay: 0.48s; }
+
+        /* Stagger — grid/flex container children */
+        .stagger > * {
+            opacity: 0;
+            transform: translateY(18px);
+            transition:
+                opacity 0.55s var(--ease-out-expo),
+                transform 0.55s var(--ease-out-expo);
+        }
+
+        .slide.visible .stagger > *:nth-child(1) { transition-delay: 0.15s; }
+        .slide.visible .stagger > *:nth-child(2) { transition-delay: 0.22s; }
+        .slide.visible .stagger > *:nth-child(3) { transition-delay: 0.29s; }
+        .slide.visible .stagger > *:nth-child(4) { transition-delay: 0.36s; }
+        .slide.visible .stagger > *:nth-child(5) { transition-delay: 0.43s; }
+        .slide.visible .stagger > *:nth-child(6) { transition-delay: 0.50s; }
+        .slide.visible .stagger > *:nth-child(7) { transition-delay: 0.57s; }
+        .slide.visible .stagger > *:nth-child(8) { transition-delay: 0.64s; }
+
+        .slide.visible .stagger > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ------------------ Responsive Breakpoints ------------------ */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1rem, 3vw, 2.5rem);
+                --content-gap: clamp(0.5rem, 1.2vw, 1.2rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 2.5vw, 1.75rem);
+                --content-gap: clamp(0.4rem, 1vw, 0.9rem);
+                --body-size: clamp(0.7rem, 1.1vw, 0.95rem);
+            }
+            .nav-dots, .slide-counter {
+                display: none;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+            .two-col { grid-template-columns: 1fr; }
+            .flow { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); justify-content: center; }
+            .stat-grid { grid-template-columns: 1fr; }
+            .def-row { grid-template-columns: 1fr; gap: 4px; }
+            .def-row + .def-row { padding-top: 0.5rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Shell -->
+    <div class="progress-bar" id="progress"></div>
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+    <div class="slide-counter" id="counter"><strong>01</strong> / 25</div>
+
+    <!-- ===================== SLIDE 1 — TITLE ===================== -->
+    <section class="slide slide-title">
+        <div class="brand-mark reveal">
+            <span class="logo-shape">K8s</span>
+            <span>Antigravity x DevOps Program</span>
+            <small>· 2026 Cohort</small>
+        </div>
+        <div class="title-wrap">
+            <span class="eyebrow reveal"><span class="dot"></span>Session 01 · Advanced Container Orchestration</span>
+            <h1 class="reveal">
+                Kubernetes<br>
+                <span class="gradient-text">"Tổng Hợp &amp; Giải Sâu"</span>.
+            </h1>
+            <p class="lead reveal">
+                Tài liệu ôn tập toàn diện cho cấu trúc cụm, quản trị tài nguyên, điều phối triển khai và tích hợp AWS Lab.
+            </p>
+            <div class="meta-row reveal">
+                <span class="meta-chip primary"><span class="dot"></span>Vận hành Production</span>
+                <span class="meta-chip"><span class="dot"></span>15 Chủ đề chính</span>
+                <span class="meta-chip"><span class="dot"></span>Lab AWS &amp; Terraform</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 2 — LỘ TRÌNH ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>01 · Lộ Trình</span>
+                <h2>Khám Phá Hệ Thống Kubernetes.</h2>
+                <p class="lead">Lộ trình học tập được phân chia thành 4 khối kiến thức chính nhằm cung cấp năng lực vận hành chuyên nghiệp.</p>
+            </div>
+            
+            <div class="grid grid-4 stagger">
+                <div class="card">
+                    <span class="badge">Block 01</span>
+                    <div class="card-title">Core Architecture</div>
+                    <div class="card-desc">Cơ chế desired state, kiến trúc Control Plane/Worker Nodes, vòng đời Pod và Deployment tự phục hồi.</div>
+                </div>
+                <div class="card">
+                    <span class="badge badge-amber">Block 02</span>
+                    <div class="card-title">Config &amp; Network</div>
+                    <div class="card-desc">Tách biệt cấu hình bảo mật bằng ConfigMap/Secret, dịch vụ định tuyến Service và Ingress Gateway L7.</div>
+                </div>
+                <div class="card">
+                    <span class="badge badge-green">Block 03</span>
+                    <div class="card-title">Operations &amp; Storage</div>
+                    <div class="card-desc">Health Probes, Resource limits, HPA scaling, StatefulSet vs DaemonSet, PV/PVC và StorageClass.</div>
+                </div>
+                <div class="card">
+                    <span class="badge badge-purple">Block 04</span>
+                    <div class="card-title">Security &amp; AWS Lab</div>
+                    <div class="card-desc">Cơ chế phân quyền RBAC, tường lửa NetworkPolicy, thiết lập cụm Minikube EC2 tự động bằng Terraform.</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">01 · Tổng Quan</span>
+            <span class="trainer-tag">Session 01</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 3 — BLOCK 1 DIVIDER ===================== -->
+    <section class="slide slide-divider">
+        <div class="divider-wrap">
+            <span class="divider-label">Block 01</span>
+            <div class="section-num">01</div>
+            <h2>Core Architecture &amp; <span class="accent">Primitives</span>.</h2>
+            <p class="divider-sub">Giải mã cơ chế vận hành cốt lõi, kiến trúc cụm máy chủ và cách thức hoạt động của các đối tượng cơ bản.</p>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 4 — PROBLEM VS SOLUTION ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Bài Toán Vận Hành</span>
+                <h2>Tại sao chúng ta cần Kubernetes?</h2>
+                <p class="lead">Docker giải quyết môi trường chạy local, nhưng quy mô sản xuất (production) phát sinh nhiều rủi ro cần giải pháp tự động hóa.</p>
+            </div>
+            
+            <div class="reveal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vấn đề thực tế</th>
+                            <th>Khi không có Kubernetes</th>
+                            <th>Giải pháp với Kubernetes</th>
+                            <th>Hạn chế (Drawbacks)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Container sập lúc nửa đêm</strong></td>
+                            <td>Kỹ sư phải SSH vào server để restart thủ công.</td>
+                            <td>Tự phát hiện và restart tự động qua Control Loop.</td>
+                            <td>Gây vòng lặp <code>CrashLoopBackOff</code> nếu lỗi logic app.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Traffic đột biến (spike 5x)</strong></td>
+                            <td>Scale hạ tầng bằng tay, chậm trễ dẫn tới sập mạng.</td>
+                            <td>HPA tự động scale số lượng Pod dựa trên CPU/RAM thực tế.</td>
+                            <td>Độ trễ khởi động pod mới khiến app vẫn chịu tải trong vài phút.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cập nhật phiên bản mới</strong></td>
+                            <td>Gây downtime hoặc cấu hình kịch bản đổi cổng phức tạp.</td>
+                            <td>Rolling update thay thế dần từng Pod giúp zero-downtime.</td>
+                            <td>Yêu cầu ứng dụng phải tương thích ngược (backward compatible).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phân bổ container lên cụm</strong></td>
+                            <td>Tính toán tài nguyên trống thủ công, dễ mất cân bằng.</td>
+                            <td>Scheduler tự động lập lịch tối ưu dựa trên cấu hình khai báo.</td>
+                            <td>Cụm quá tải khiến pod mới bị kẹt ở trạng thái <code>Pending</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 04</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 5 — DECLARATIVE VS IMPERATIVE ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Tư Tưởng Cốt Lõi</span>
+                <h2>Declarative State &amp; Vòng Lặp Control Loop.</h2>
+                <p class="lead">Sự khác biệt giữa việc ra lệnh từng bước và việc khai báo trạng thái mong muốn.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Imperative (Mệnh lệnh) vs Declarative (Khai báo)</div>
+                    <div class="card-desc" style="margin-bottom: 0.5rem;">
+                        <strong>Imperative:</strong> Ra lệnh chạy trực tiếp container. Nếu sập, lập trình viên tự quản trị luồng khôi phục.
+                    </div>
+                    <div class="code-block" style="margin-bottom: 0.8rem;"><span class="cmt"># Chạy thủ công từng container</span>
+<span class="kw">docker</span> run -d nginx:1.27</div>
+                    
+                    <div class="card-desc" style="margin-bottom: 0.5rem;">
+                        <strong>Declarative:</strong> Khai báo trạng thái mong muốn (Desired State) qua YAML. Kubernetes tự điều khiển.
+                    </div>
+                    <div class="code-block"><span class="cmt"># Khai báo cấu hình YAML</span>
+<span class="kw">kubectl</span> apply -f deployment.yaml</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title" style="margin-bottom: 0.5rem;">Vòng Lặp Reconcile (Control Loop)</div>
+                    <div class="card-desc" style="margin-bottom: 0.8rem;">Mỗi controller trong K8s chạy vòng lặp này liên tục để đồng bộ trạng thái thực tế về khớp với YAML khai báo.</div>
+                    
+                    <!-- SVG Loop -->
+                    <svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;" aria-hidden="true">
+                        <defs>
+                            <marker id="arr-fwd-5" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L8,3 z" fill="#007bc1"/>
+                            </marker>
+                            <marker id="arr-orange-5" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L8,3 z" fill="#fe7624"/>
+                            </marker>
+                        </defs>
+                        <!-- Steps -->
+                        <rect x="10" y="55" width="105" height="50" rx="8" fill="#e3f0f7" stroke="#007bc1" stroke-width="1.5"/>
+                        <text x="62" y="77" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#1e293b">Desired State</text>
+                        <text x="62" y="90" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8.5" fill="#4d4e4e">(YAML khai báo)</text>
+
+                        <line x1="115" y1="80" x2="140" y2="80" stroke="#007bc1" stroke-width="1.5" marker-end="url(#arr-fwd-5)"/>
+
+                        <rect x="150" y="55" width="105" height="50" rx="8" fill="#fff7ec" stroke="#fe7624" stroke-width="1.5"/>
+                        <text x="202" y="77" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#1e293b">Compare (Diff)</text>
+                        <text x="202" y="90" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8.5" fill="#4d4e4e">So sánh thực tế</text>
+
+                        <line x1="255" y1="80" x2="280" y2="80" stroke="#fe7624" stroke-width="1.5" marker-end="url(#arr-orange-5)"/>
+
+                        <rect x="290" y="55" width="105" height="50" rx="8" fill="#1e293b" stroke="#1e293b" stroke-width="1.5"/>
+                        <text x="342" y="77" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#fbae42">Reconcile</text>
+                        <text x="342" y="90" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8.5" fill="#c4d5dd">Sửa đổi sai lệch</text>
+
+                        <path d="M342,55 C342,20 62,20 62,55" fill="none" stroke="#00b3d9" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-fwd-5)"/>
+                        <text x="200" y="30" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8.5" fill="#00b3d9" font-style="italic">Vòng lặp điều phối liên tục (Control Loop)</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 05</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 6 — CLUSTER ARCHITECTURE ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Thành Phần Hệ Thống</span>
+                <h2>Khám Phá Kiến Trúc Cluster.</h2>
+                <p class="lead">Sự phân chia rõ ràng giữa bộ não điều phối (Control Plane) và cơ bắp thực thi (Worker Nodes).</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Control Plane (Bộ não điều phối)</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">kube-apiserver</div>
+                            <div class="def-desc">Cổng giao tiếp duy nhất, xác thực quyền truy cập RBAC và ghi cấu hình tài nguyên vào <code>etcd</code>.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">etcd</div>
+                            <div class="def-desc">Cơ sở dữ liệu key-value phân tán sử dụng thuật toán Raft, lưu trữ toàn bộ trạng thái của cụm.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">kube-scheduler</div>
+                            <div class="def-desc">Quan sát Pod mới chưa gán Node, chọn Node tối ưu dựa trên cấu hình tài nguyên yêu cầu (requests).</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">kube-controller-mgr</div>
+                            <div class="def-desc">Nơi tập hợp các bộ điều phối (Deployment Controller, Node Controller) duy trì reconcile loop.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Worker Node (Cơ bắp thực thi)</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">kubelet</div>
+                            <div class="def-desc">Agent chạy trực tiếp trên mỗi Node, giám sát và ra lệnh cho Container Runtime khởi tạo container.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">kube-proxy</div>
+                            <div class="def-desc">Quản lý các luật mạng (IPtables hoặc IPVS) để mở luồng kết nối cho các dịch vụ Service.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">containerd</div>
+                            <div class="def-desc">Container Runtime chịu trách nhiệm kéo image từ Docker Registry và quản lý việc chạy container.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 06</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 7 — RESOURCE LIFECYCLE ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Chu Kỳ Tài Nguyên</span>
+                <h2>Quy Trình Khởi Tạo &amp; Chạy Pod.</h2>
+                <p class="lead">Từ lúc gọi lệnh apply cho đến khi container thực tế hoạt động trên hạ tầng.</p>
+            </div>
+            
+            <div class="stepper reveal">
+                <div class="step-item">
+                    <div class="step-line">
+                        <div class="step-dot">1</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Gửi khai báo qua <span class="badge badge-amber">kubectl apply</span></div>
+                        <div class="step-desc">File YAML được gửi đến <code>kube-apiserver</code>. API-server kiểm tra định dạng, phân quyền RBAC và ghi trạng thái này vào cơ sở dữ liệu <code>etcd</code>.</div>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-line">
+                        <div class="step-dot">2</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Tạo tài nguyên logic bằng <span class="badge">Controller</span></div>
+                        <div class="step-desc"><code>Deployment Controller</code> phát hiện tài nguyên mới, ra lệnh tạo ra <code>ReplicaSet</code>, sau đó ReplicaSet sinh ra các Pod có trạng thái <code>Pending</code>.</div>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-line">
+                        <div class="step-dot">3</div>
+                        <div class="step-connector"></div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Lập lịch tìm Node từ <span class="badge badge-purple">Scheduler</span></div>
+                        <div class="step-desc"><code>kube-scheduler</code> quét các Pod chưa có Node chỉ định. Chọn Node tốt nhất dựa trên RAM/CPU trống, ghi nhận Node được gán vào spec của Pod.</div>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-line">
+                        <div class="step-dot">4</div>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-title">Thực thi tại Node qua <span class="badge badge-green">Kubelet</span></div>
+                        <div class="step-desc"><code>kubelet</code> tại Node đích phát hiện Pod gán cho mình, ra lệnh cho <code>containerd</code> pull image và khởi chạy container. Pod chuyển trạng thái <code>Running</code>.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 07</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 8 — POD & SIDECAR ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Đối Tượng Cơ Bản</span>
+                <h2>Pod &amp; Các Mẫu Container Phối Hợp.</h2>
+                <p class="lead">Pod là đơn vị tính toán nhỏ nhất. Nhiều container trong cùng Pod chia sẻ chung IP, localhost, IPC và Volume.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Mẫu Container Phụ Trợ (Patterns)</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">Sidecar Pattern</div>
+                            <div class="def-desc">Chạy container phụ cạnh app chính trong cùng Pod để hỗ trợ (ví dụ: Fluent Bit đọc log từ file ghi ra chung rồi đẩy lên Elasticsearch).</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">Init Container</div>
+                            <div class="def-desc">Chạy và kết thúc thành công trước khi các container chính được khởi tạo (ví dụ: chạy script chờ DB sẵn sàng).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="cmt"># YAML đặc tả Pod có Init Container</span>
+<span class="kw">apiVersion</span>: <span class="str">v1</span>
+<span class="kw">kind</span>: <span class="str">Pod</span>
+<span class="fn">metadata</span>:
+  <span class="fn">name</span>: <span class="str">web-app</span>
+<span class="fn">spec</span>:
+  <span class="fn">initContainers</span>:
+  - <span class="fn">name</span>: <span class="str">wait-db</span>
+    <span class="fn">image</span>: <span class="str">busybox</span>
+    <span class="fn">command</span>: [<span class="str">"sh"</span>, <span class="str">"-c"</span>, <span class="str">"until nc -z db 5432; do sleep 2; done"</span>]
+  <span class="fn">containers</span>:
+  - <span class="fn">name</span>: <span class="str">nginx</span>
+    <span class="fn">image</span>: <span class="str">nginx:1.27</span></div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 08</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 9 — DEPLOYMENT & REPLICASET ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Điều Phối</span>
+                <h2>Deployment &amp; ReplicaSet.</h2>
+                <p class="lead">Deployment quản trị vòng đời Pod thông qua việc quản lý các bản ghi ReplicaSet tương ứng.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Cấu Trúc Quản Lý Phân Cấp</div>
+                    <div class="card-desc" style="margin-bottom: 0.5rem;">Deployment quản lý các revision của ReplicaSet. ReplicaSet trực tiếp duy trì số lượng Pod.</div>
+                    
+                    <!-- SVG Hierarchy -->
+                    <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;" aria-hidden="true">
+                        <defs>
+                            <marker id="arr-down-9" markerWidth="6" markerHeight="6" refX="3" refY="5" orient="auto">
+                                <path d="M0,0 L6,0 L3,6 z" fill="#007bc1"/>
+                            </marker>
+                        </defs>
+                        <!-- Deployment box -->
+                        <rect x="165" y="5" width="170" height="30" rx="6" fill="#e3f0f7" stroke="#007bc1" stroke-width="1.5"/>
+                        <text x="250" y="24" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#1e293b">Deployment (web-deployment)</text>
+
+                        <!-- Line to ReplicaSet -->
+                        <line x1="250" y1="35" x2="250" y2="50" stroke="#007bc1" stroke-width="1.5" marker-end="url(#arr-down-9)"/>
+
+                        <!-- ReplicaSet box -->
+                        <rect x="155" y="50" width="190" height="30" rx="6" fill="#ffd6a233" stroke="#fe7624" stroke-width="1.5"/>
+                        <text x="250" y="69" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#1e293b">ReplicaSet (Revision 1)</text>
+
+                        <!-- Lines to Pods -->
+                        <path d="M250,80 L130,100 M250,80 L250,100 M250,80 L370,100" fill="none" stroke="#698695" stroke-dasharray="3,2" stroke-width="1"/>
+
+                        <!-- Pod boxes -->
+                        <rect x="80" y="100" width="100" height="20" rx="4" fill="#1e293b" stroke="#1e293b" stroke-width="1"/>
+                        <text x="130" y="113" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#ffffff">Pod 1 (Running)</text>
+
+                        <rect x="200" y="100" width="100" height="20" rx="4" fill="#1e293b" stroke="#1e293b" stroke-width="1"/>
+                        <text x="250" y="113" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#ffffff">Pod 2 (Running)</text>
+
+                        <rect x="320" y="100" width="100" height="20" rx="4" fill="#1e293b" stroke="#1e293b" stroke-width="1"/>
+                        <text x="370" y="113" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#ffffff">Pod 3 (Running)</text>
+                    </svg>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Cơ chế Tự Phục Hồi (Self-Healing)</div>
+                    <div class="callout callout-green">
+                        <p><strong>Duy trì Replicas liên tục:</strong> Nếu một Pod bị xóa đột ngột hoặc Node sập, ReplicaSet Controller phát hiện số lượng Pod thực tế nhỏ hơn mong muốn (2 &lt; 3), lập tức tạo mới 1 Pod thay thế để khôi phục trạng thái khai báo ban đầu.</p>
+                    </div>
+                    <div class="card card-dark" style="margin-top: auto;">
+                        <div class="card-title" style="color: var(--brand-amber);">Insight Vận Hành</div>
+                        <div class="card-body">Deployment giúp rời bỏ cách quản lý Pod đơn lẻ, cung cấp năng lực kiểm soát version và rollback không downtime.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 09</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 10 — NAMESPACE & LABELS ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 01 · Quản Lý Logic</span>
+                <h2>Namespace &amp; Labels.</h2>
+                <p class="lead">Vách ngăn phân chia logic và cơ chế định danh gắn kết linh hoạt các tài nguyên trong cụm.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Namespace (Vách ngăn logic)</div>
+                    <div class="card-desc">Phân tách tài nguyên trong cùng cụm vật lý. Phù hợp cách ly môi trường (dev, staging, prod) hoặc đội nhóm.</div>
+                    <div class="callout callout-amber">
+                        <p><strong>Cảnh báo thực tế:</strong> Namespace không cách ly traffic mạng. Các Pod khác Namespace vẫn gọi chéo được nhau trừ khi áp dụng NetworkPolicy.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Labels &amp; Selectors (Định danh)</div>
+                    <div class="card-desc">Cặp Key-Value gán trực tiếp lên metadata của tài nguyên. Selectors được sử dụng để truy vấn hoặc kết nối các tài nguyên với nhau (như Service tìm Pods).</div>
+                    <div class="code-block" style="margin-top: auto;"><span class="cmt"># Lọc Pod theo label</span>
+<span class="kw">kubectl</span> get pods -l app=frontend,env=prod</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 01 · Core Architecture</span>
+            <span class="trainer-tag">Slide 10</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 11 — BLOCK 2 DIVIDER ===================== -->
+    <section class="slide slide-divider">
+        <div class="divider-wrap">
+            <span class="divider-label">Block 02</span>
+            <div class="section-num">02</div>
+            <h2>Configuration &amp; <span class="accent">Networking</span>.</h2>
+            <p class="divider-sub">Cách thức lưu cấu hình, bảo mật tài khoản và cơ chế mở cổng kết nối mạng ra internet.</p>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 12 — CONFIGMAP & SECRET ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 02 · Cấu Hình</span>
+                <h2>ConfigMap vs Secret.</h2>
+                <p class="lead">Tách biệt mã nguồn ứng dụng ra khỏi dữ liệu cấu hình để đảm bảo nguyên lý Cloud-native.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Định Nghĩa Tài Nguyên</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">ConfigMap</div>
+                            <div class="def-desc">Lưu trữ dữ liệu cấu hình không bảo mật dưới dạng key-value hoặc file cấu hình raw (config.json, env vars).</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">Secret</div>
+                            <div class="def-desc">Lưu trữ thông tin nhạy cảm (mật khẩu, tokens, SSH keys) đã được mã hóa dạng base64 trong manifest.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-accent card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="card-title" style="color: var(--brand-orange);">Cảnh báo Bảo mật Thực chiến</div>
+                        <div class="card-desc" style="margin-top: 0.5rem; font-size: var(--body-size); line-height: 1.5;">
+                            Dữ liệu trong Kubernetes Secret mặc định <strong>chỉ encode Base64</strong>, không phải mã hóa. Bất kỳ ai có quyền đọc API hoặc file YAML đều decode được thông tin dễ dàng.
+                        </div>
+                    </div>
+                    <div class="callout callout-red" style="margin-top: 1rem;">
+                        <p><strong>Giải pháp Production:</strong> Kích hoạt Encryption-at-rest cho etcd hoặc sử dụng external secret manager (Vault, AWS Secrets Manager thông qua ESO).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 02 · Config &amp; Network</span>
+            <span class="trainer-tag">Slide 12</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 13 — SERVICE & NETWORKING ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 02 · Mạng Nội Bộ</span>
+                <h2>Kubernetes Service: Điểm Truy Cập Ổn Định.</h2>
+                <p class="lead">Pod có thể bị xóa và đổi IP liên tục. Service cung cấp một IP tĩnh và DNS đại diện để định hướng traffic.</p>
+            </div>
+            
+            <div class="decision reveal">
+                <div class="decision-header">Tình huống thực tế → Loại Service phù hợp</div>
+                <div class="decision-row">
+                    <div class="decision-cond">Chỉ cho phép các ứng dụng nội bộ giao tiếp với nhau trong cụm</div>
+                    <div class="decision-result">ClusterIP (Mặc định)</div>
+                </div>
+                <div class="decision-row">
+                    <div class="decision-cond">Mở cổng trực tiếp trên tất cả các Node của cụm để truy cập từ ngoài qua Node IP</div>
+                    <div class="decision-result">NodePort</div>
+                </div>
+                <div class="decision-row">
+                    <div class="decision-cond">Tự động khởi tạo Load Balancer từ Cloud Provider (AWS, GCP) để điều hướng traffic public</div>
+                    <div class="decision-result">LoadBalancer</div>
+                </div>
+                <div class="decision-row">
+                    <div class="decision-cond">Cần kết nối trực tiếp đến IP của từng Pod mà không qua Load Balancer (DB clustering)</div>
+                    <div class="decision-result">Headless Service (clusterIP: None)</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 02 · Config &amp; Network</span>
+            <span class="trainer-tag">Slide 13</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 14 — INGRESS ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 02 · Định Tuyến Ngoài</span>
+                <h2>Ingress: Định Tuyến Lớp Ứng Dụng (L7).</h2>
+                <p class="lead">Ingress quản lý định tuyến HTTP/HTTPS từ ngoài internet vào các Service bên trong cụm dựa trên Host hoặc Path.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Ưu điểm so với L4 LoadBalancer</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">Tiết kiệm chi phí</div>
+                            <div class="def-desc">Chỉ cần khởi tạo duy nhất 1 Load Balancer của Cloud làm Gateway, định tuyến nhiều service qua Path.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">Tính năng L7</div>
+                            <div class="def-desc">Cấu hình Hostname routing (myshop.com), SSL/TLS termination tập trung tại Ingress Controller.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="cmt"># Định nghĩa định tuyến trong Ingress YAML</span>
+<span class="kw">apiVersion</span>: <span class="str">networking.k8s.io/v1</span>
+<span class="kw">kind</span>: <span class="str">Ingress</span>
+<span class="fn">spec</span>:
+  <span class="fn">rules</span>:
+  - <span class="fn">host</span>: <span class="str">myshop.com</span>
+    <span class="fn">http</span>:
+      <span class="fn">paths</span>:
+      - <span class="fn">path</span>: <span class="str">/api</span>
+        <span class="fn">pathType</span>: <span class="str">Prefix</span>
+        <span class="fn">backend</span>:
+          <span class="fn">service</span>:
+            <span class="fn">name</span>: <span class="str">api-service</span>
+            <span class="fn">port</span>: { <span class="fn">number</span>: <span class="val">8080</span> }</div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 02 · Config &amp; Network</span>
+            <span class="trainer-tag">Slide 14</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 15 — BLOCK 3 DIVIDER ===================== -->
+    <section class="slide slide-divider">
+        <div class="divider-wrap">
+            <span class="divider-label">Block 03</span>
+            <div class="section-num">03</div>
+            <h2>Advanced Operation &amp; <span class="accent">Storage</span>.</h2>
+            <p class="divider-sub">Giám sát sức khỏe, quản trị tài nguyên nâng cao, cập nhật zero-downtime và các giải pháp lưu trữ bền vững.</p>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 16 — HEALTH PROBES ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 03 · Độ Tin Cậy</span>
+                <h2>Health Probes: Cơ Chế Giám Sát Sức Khỏe.</h2>
+                <p class="lead">Kubernetes giám sát và quyết định trạng thái hoạt động của Container thông qua 3 loại probe.</p>
+            </div>
+            
+            <div class="grid grid-3 stagger">
+                <div class="card">
+                    <div class="card-title">1. Startup Probe</div>
+                    <div class="card-desc">Kiểm tra ứng dụng khởi chạy thành công hay chưa. Tạm dừng các probe khác (Liveness, Readiness) cho đến khi startup thành công.</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">2. Liveness Probe</div>
+                    <div class="card-desc">Kiểm tra container còn sống không. Thất bại liên tiếp sẽ kích hoạt cơ chế giết container hiện tại và khởi tạo container mới.</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">3. Readiness Probe</div>
+                    <div class="card-desc">Kiểm tra ứng dụng đã sẵn sàng nhận traffic chưa. Thất bại sẽ gỡ Pod khỏi danh sách endpoints của Service (không restart).</div>
+                </div>
+            </div>
+
+            <div class="callout callout-blue reveal">
+                <p><strong>Bẫy thiết kế hệ thống:</strong> Phải tách biệt endpoint Liveness và Readiness. Nếu database sập, Readiness trả về fail để dừng nhận traffic vào app, nhưng Liveness phải trả về success để tránh restart app liên tục vô ích.</p>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 03 · Operations &amp; Storage</span>
+            <span class="trainer-tag">Slide 16</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 17 — RESOURCES & HPA ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 03 · Tài Nguyên</span>
+                <h2>Quản Lý Tài Nguyên &amp; Tự Động Scale.</h2>
+                <p class="lead">Giới hạn CPU/RAM giúp bảo vệ Worker Node khỏi tình trạng cạn kiệt tài nguyên cục bộ.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Requests vs Limits (RAM/CPU)</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">Requests</div>
+                            <div class="def-desc">Lượng tài nguyên tối thiểu cần để khởi chạy Pod. Scheduler dựa vào đây để gán Node.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">Limits</div>
+                            <div class="def-desc">Ngưỡng tối đa Pod được dùng. Vượt CPU gây <em>throttled</em> (chạy chậm). Vượt Memory kích hoạt OOM và gây <code>OOMKilled</code>.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-accent" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="card-title" style="color: var(--brand-orange);">HPA (Horizontal Pod Autoscaler)</div>
+                        <div class="card-desc" style="font-size: var(--body-size); line-height: 1.5; margin-top: 0.5rem;">
+                            Tự động tăng/giảm số lượng bản sao Pod dựa trên mức sử dụng CPU/RAM thực tế hoặc metric tùy biến của ứng dụng.
+                        </div>
+                    </div>
+                    <div class="card-dark card" style="margin-top: 1rem;">
+                        <div class="card-body">Cần cấu hình chính xác resource requests vì HPA dựa trên tỷ lệ phần trăm sử dụng của thông số requests để ra quyết định scale.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 03 · Operations &amp; Storage</span>
+            <span class="trainer-tag">Slide 17</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 18 — ROLLOUT & ROLLBACK ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 03 · Vận Hành Triển Khai</span>
+                <h2>Rollout &amp; Rollback: Cập Nhật Zero-Downtime.</h2>
+                <p class="lead">Chiến lược Rolling Update mặc định thay thế dần từng Pod cũ bằng Pod mới một cách tuần tự.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Quy Trình Rolling Update</div>
+                    <div class="flow" style="flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                        <div class="flow-step">
+                            <span class="flow-num">Bước 1</span>
+                            <div class="flow-title">Trạng thái V1</div>
+                            <div class="flow-body">Hệ thống đang chạy ổn định với 3 Pods phiên bản cũ (V1).</div>
+                        </div>
+                        <div class="flow-step">
+                            <span class="flow-num">Bước 2</span>
+                            <div class="flow-title">Khởi động Pod V2</div>
+                            <div class="flow-body">Khởi động 1 Pod V2 mới. Chỉ gỡ Pod V1 sau khi Pod V2 đạt trạng thái <code>Ready</code>.</div>
+                        </div>
+                        <div class="flow-step" style="border-color: var(--brand-orange-light); background: linear-gradient(180deg, #fff 0%, #fff7ec 100%);">
+                            <span class="flow-num">Bước 3</span>
+                            <div class="flow-title">Hoàn tất</div>
+                            <div class="flow-body">Lặp lại tuần tự cho đến khi toàn bộ cụm chuyển sang V2.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Khôi phục Sự Cố (Rollback)</div>
+                    <div class="card-desc">Lịch sử cập nhật được lưu giữ để có thể hoàn tác tức thì.</div>
+                    
+                    <div class="code-block" style="margin-top: 1rem;"><span class="cmt"># Kiểm tra lịch sử cập nhật</span>
+<span class="kw">kubectl</span> rollout history deployment/web-deployment
+
+<span class="cmt"># Khôi phục về phiên bản ngay trước đó</span>
+<span class="kw">kubectl</span> rollout undo deployment/web-deployment</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 03 · Operations &amp; Storage</span>
+            <span class="trainer-tag">Slide 18</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 19 — STATEFULSET VS DAEMONSET ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 03 · Workloads Nâng Cao</span>
+                <h2>StatefulSet vs DaemonSet.</h2>
+                <p class="lead">Các loại tài nguyên chuyên dụng cho bài toán lưu trữ trạng thái ổn định và công cụ giám sát hạ tầng.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">StatefulSet (Ứng dụng có trạng thái)</div>
+                    <div class="card-desc">Chạy các hệ thống quản trị dữ liệu (PostgreSQL, Redis Cluster, Kafka).</div>
+                    <ul class="bullets">
+                        <li>Gán tên định danh số thứ tự duy nhất cố định: <code>db-0</code>, <code>db-1</code>.</li>
+                        <li>Mỗi Pod liên kết tĩnh với PVC riêng, giữ nguyên liên kết kể cả khi Pod bị xóa và dựng lại.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">DaemonSet (Chạy trên mọi Node)</div>
+                    <div class="card-desc">Chạy các agent giám sát hoặc thu thập log hệ thống (Fluent Bit, Prometheus Node Exporter).</div>
+                    <ul class="bullets">
+                        <li>Đảm bảo chạy duy nhất 1 bản sao Pod trên tất cả các Worker Node.</li>
+                        <li>Tự động chạy Pod trên Node mới thêm vào cụm khi scale-out hạ tầng.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 03 · Operations &amp; Storage</span>
+            <span class="trainer-tag">Slide 19</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 20 — STORAGE CORE ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 03 · Lưu Trữ</span>
+                <h2>PV, PVC &amp; StorageClass.</h2>
+                <p class="lead">Kiến trúc tách biệt vai trò quản lý hạ tầng phần cứng của Admin và yêu cầu sử dụng của Developer.</p>
+            </div>
+            
+            <div class="grid grid-3 stagger">
+                <div class="card">
+                    <div class="card-title">PersistentVolume (PV)</div>
+                    <div class="card-desc">Tài nguyên lưu trữ thực tế được cấp phát trong hệ thống vật lý hoặc cloud (AWS EBS, EFS, NFS volume).</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">PersistentVolumeClaim (PVC)</div>
+                    <div class="card-desc">Yêu cầu xin cấp phát tài nguyên lưu trữ từ phía lập trình viên (xin dung lượng, chế độ truy cập).</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">StorageClass (SC)</div>
+                    <div class="card-desc">Định nghĩa driver tự động khởi tạo PV vật lý khi có yêu cầu PVC gửi lên (Dynamic Provisioning).</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 03 · Operations &amp; Storage</span>
+            <span class="trainer-tag">Slide 20</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 21 — ACCESS MODES ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 03 · Cơ Chế Lưu Trữ</span>
+                <h2>Chế Độ Truy Cập Lưu Trữ &amp; Hạn Chế.</h2>
+                <p class="lead">Phân loại khả năng kết nối đồng thời từ các Node tới tài nguyên lưu trữ.</p>
+            </div>
+            
+            <div class="reveal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Access Mode</th>
+                            <th>Viết tắt</th>
+                            <th>Mô tả khả năng kết nối</th>
+                            <th>Hỗ trợ thực tế</th>
+                            <th>Hạn chế (Drawbacks)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ReadWriteOnce</strong></td>
+                            <td>RWO</td>
+                            <td>Chỉ cho phép 1 Node kết nối để đọc và ghi dữ liệu</td>
+                            <td>AWS EBS, Disk nội bộ Node</td>
+                            <td>Không chia sẻ được file cho các Pod nằm trên các Node khác nhau.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ReadOnlyMany</strong></td>
+                            <td>ROX</td>
+                            <td>Nhiều Node kết nối song song nhưng chỉ được phép đọc</td>
+                            <td>AWS EFS, NFS</td>
+                            <td>Các Pod không thể ghi dữ liệu mới trực tiếp lên volume này.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ReadWriteMany</strong></td>
+                            <td>RWX</td>
+                            <td>Nhiều Node kết nối đồng thời để cùng đọc và ghi</td>
+                            <td>AWS EFS, NFS, CephFS</td>
+                            <td>Cần cấu hình khoá file phức tạp ở mức app để tránh ghi đè hư hỏng.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 03 · Operations &amp; Storage</span>
+            <span class="trainer-tag">Slide 21</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 22 — BLOCK 4 DIVIDER ===================== -->
+    <section class="slide slide-divider">
+        <div class="divider-wrap">
+            <span class="divider-label">Block 04</span>
+            <div class="section-num">04</div>
+            <h2>Security &amp; <span class="accent">AWS Deployment</span>.</h2>
+            <p class="divider-sub">Bảo mật tài nguyên cụm máy chủ và chiến luyện triển khai AWS Lab bằng công cụ Terraform.</p>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 23 — SECURITY & RBAC ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 04 · Bảo Mật</span>
+                <h2>RBAC &amp; NetworkPolicy.</h2>
+                <p class="lead">Bảo vệ cả đường API điều phối lẫn đường truyền mạng nội bộ giữa các container trong cụm.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">RBAC (Role-Based Access Control)</div>
+                    <div class="def-list">
+                        <div class="def-row">
+                            <div class="def-term">ServiceAccount</div>
+                            <div class="def-desc">Định danh gán cho các Pod để ứng dụng giao tiếp hợp lệ với API-server.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">Role</div>
+                            <div class="def-desc">Khai báo quyền hạn thao tác (verbs: get, list, create) trên tài nguyên trong namespace.</div>
+                        </div>
+                        <div class="def-row">
+                            <div class="def-term">RoleBinding</div>
+                            <div class="def-desc">Bản ghi liên kết tài khoản ServiceAccount với Role để thực thi phân quyền.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">NetworkPolicy (Tường lửa Pod)</div>
+                    <div class="card-desc">Quản lý chặn/cho phép các luồng truyền mạng giữa các Pod dựa trên Labels và IP blocks.</div>
+                    <div class="callout callout-amber" style="margin-top: 1rem;">
+                        <p><strong>Bảo mật mặc định:</strong> Kubernetes mặc định cho phép mọi Pod kết nối chéo tự do. Cấu hình NetworkPolicy là bắt buộc để xây dựng mạng Zero-Trust.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 04 · Security &amp; AWS Lab</span>
+            <span class="trainer-tag">Slide 23</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 24 — AWS LAB TERRAFORM ===================== -->
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Block 04 · AWS Lab Setup</span>
+                <h2>Chiến Lược Triển Khai Lab Trên AWS Bằng Terraform.</h2>
+                <p class="lead">Khởi tạo hạ tầng EC2 tự động cài đặt Minikube để giả lập cụm Kubernetes phục vụ học tập.</p>
+            </div>
+            
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Hạ tầng AWS Lab</div>
+                    
+                    <!-- SVG Architecture -->
+                    <svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;" aria-hidden="true">
+                        <defs>
+                            <marker id="arr-right-24" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L6,3 z" fill="#007bc1"/>
+                            </marker>
+                            <marker id="arr-orange-24" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L6,3 z" fill="#fe7624"/>
+                            </marker>
+                        </defs>
+                        <!-- AWS VPC boundary -->
+                        <rect x="5" y="15" width="485" height="130" rx="10" fill="none" stroke="#fe7624" stroke-width="1.5" stroke-dasharray="6,4"/>
+                        <text x="15" y="28" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="700" fill="#fe7624">AWS VPC / SG</text>
+
+                        <!-- AWS ALB -->
+                        <rect x="20" y="55" width="90" height="50" rx="8" fill="#ffd6a233" stroke="#fe7624" stroke-width="1.5"/>
+                        <text x="65" y="78" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" font-weight="700" fill="#1e293b">Application LB</text>
+                        <text x="65" y="91" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#4d4e4e">Forward port 80</text>
+
+                        <line x1="110" y1="80" x2="140" y2="80" stroke="#fe7624" stroke-width="1.5" marker-end="url(#arr-orange-24)"/>
+
+                        <!-- EC2 Instance -->
+                        <rect x="150" y="40" width="180" height="85" rx="8" fill="#1e293b" stroke="#1e293b" stroke-width="1.5"/>
+                        <text x="240" y="55" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" font-weight="700" fill="#ffffff">EC2 Host (T3.medium)</text>
+
+                        <!-- Minikube inside EC2 -->
+                        <rect x="165" y="68" width="150" height="42" rx="6" fill="#fff7ec" stroke="#fbae42" stroke-width="1.5"/>
+                        <text x="240" y="86" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="700" fill="#1e293b">Minikube Cluster</text>
+                        <text x="240" y="98" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#698695">NodePort: 30080</text>
+
+                        <line x1="330" y1="80" x2="360" y2="80" stroke="#007bc1" stroke-width="1.5" marker-end="url(#arr-right-24)"/>
+
+                        <!-- App deployment -->
+                        <rect x="370" y="55" width="100" height="50" rx="8" fill="#e3f0f7" stroke="#007bc1" stroke-width="1.5"/>
+                        <text x="420" y="78" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="9.5" font-weight="700" fill="#1e293b">Nginx Pod (App)</text>
+                        <text x="420" y="91" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="8" fill="#4d4e4e">Exposed port 80</text>
+                    </svg>
+                    <div class="callout callout-blue" style="margin-top: 0.5rem;">
+                        <p><strong>Kinh nghiệm thực chiến:</strong> Hãy chạy lệnh <code>kubectl apply</code> trực tiếp từ kịch bản script <code>user_data</code> khi máy EC2 khởi tạo để đơn giản hóa luồng triển khai lab.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Mẫu Terraform Provider &amp; EC2 Host</div>
+                    <div class="code-block"><span class="kw">terraform</span> {
+  <span class="fn">required_providers</span> {
+    <span class="fn">aws</span> = {
+      <span class="fn">source</span>  = <span class="str">"hashicorp/aws"</span>
+      <span class="fn">version</span> = <span class="str">"~> 5.0"</span>
+    }
+  }
+}
+
+<span class="kw">resource</span> <span class="str">"aws_instance"</span> <span class="str">"k8s_host"</span> {
+  <span class="fn">ami</span>           = data.aws_ami.ubuntu.id
+  <span class="fn">instance_type</span> = <span class="str">"t3.medium"</span> <span class="cmt"># Minikube min 2 vCPUs/4GB</span>
+  
+  <span class="fn">user_data</span> = templatefile(<span class="str">"setup.sh"</span>, {
+    <span class="fn">node_port</span> = <span class="val">30080</span>
+  })
+}</div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <span class="section-tag">Block 04 · Security &amp; AWS Lab</span>
+            <span class="trainer-tag">Slide 24</span>
+        </div>
+    </section>
+
+    <!-- ===================== SLIDE 25 — CLOSING ===================== -->
+    <section class="slide slide-closing">
+        <div class="closing-wrap">
+            <span class="eyebrow reveal"><span class="dot"></span>Q&amp;A / Thảo luận</span>
+            <h1 class="reveal">
+                Hỏi đáp &amp; Trao đổi.<br>
+                <span class="gradient-text">Let's discuss.</span>
+            </h1>
+            <p class="lead reveal">
+                Hỗ trợ làm rõ mọi chi tiết kỹ thuật về kiến trúc, tài nguyên, mạng, lưu trữ hoặc thiết lập lab AWS.
+            </p>
+            <div class="meta-row reveal">
+                <span class="meta-chip primary"><span class="dot"></span>Antigravity x DevOps Program 2026</span>
+                <span class="meta-chip"><span class="dot"></span>Session 01 · Kubernetes Study Notes</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide Presentation Navigation & Intersection Script -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = [...document.querySelectorAll('.slide')];
+                this.currentSlide = 0;
+                this.progressBar = document.getElementById('progress');
+                this.navDotsContainer = document.getElementById('navDots');
+                this.counter = document.getElementById('counter');
+                this.setupNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.slides[0].classList.add('visible');
+                this.updateCounter(0);
+                this.updateProgress();
+            }
+            setupNavDots() {
+                this.navDotsContainer.innerHTML = '';
+                this.slides.forEach((_, i) => {
+                    const btn = document.createElement('button');
+                    btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    btn.addEventListener('click', () => this.goTo(i));
+                    this.navDotsContainer.appendChild(btn);
+                });
+                this.updateActiveDot(0);
+            }
+            setupIntersectionObserver() {
+                const obs = new IntersectionObserver((entries) => {
+                    entries.forEach((e) => {
+                        if (e.isIntersecting) {
+                            e.target.classList.add('visible');
+                            const idx = this.slides.indexOf(e.target);
+                            if (idx >= 0) {
+                                this.currentSlide = idx;
+                                this.updateCounter(idx);
+                                this.updateProgress();
+                                this.updateActiveDot(idx);
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 });
+                this.slides.forEach((s) => obs.observe(s));
+            }
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case 'ArrowDown': case 'ArrowRight': case 'PageDown': case ' ':
+                            e.preventDefault(); this.next(); break;
+                        case 'ArrowUp': case 'ArrowLeft': case 'PageUp':
+                            e.preventDefault(); this.prev(); break;
+                        case 'Home': e.preventDefault(); this.goTo(0); break;
+                        case 'End':  e.preventDefault(); this.goTo(this.slides.length - 1); break;
+                    }
+                });
+            }
+            setupTouchNav() {
+                let startY = 0;
+                document.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    const delta = startY - e.changedTouches[0].clientY;
+                    if (Math.abs(delta) > 60) { if (delta > 0) this.next(); else this.prev(); }
+                }, { passive: true });
+            }
+            setupWheelNav() {
+                let busy = false;
+                document.addEventListener('wheel', (e) => {
+                    if (busy) return;
+                    if (Math.abs(e.deltaY) < 30) return;
+                    busy = true;
+                    setTimeout(() => { busy = false; }, 600);
+                    if (e.deltaY > 0) this.next(); else this.prev();
+                }, { passive: true });
+            }
+            next() { this.goTo(Math.min(this.currentSlide + 1, this.slides.length - 1)); }
+            prev() { this.goTo(Math.max(this.currentSlide - 1, 0)); }
+            goTo(idx) { this.slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            updateActiveDot(idx) {
+                const dots = this.navDotsContainer.querySelectorAll('button');
+                dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+            updateCounter(idx) {
+                const total   = String(this.slides.length).padStart(2, '0');
+                const current = String(idx + 1).padStart(2, '0');
+                this.counter.innerHTML = `<strong>${current}</strong> / ${total}`;
+            }
+            updateProgress() {
+                const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+                this.progressBar.style.width = pct + '%';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => { new SlidePresentation(); });
+    </script>
+</body>
+</html>

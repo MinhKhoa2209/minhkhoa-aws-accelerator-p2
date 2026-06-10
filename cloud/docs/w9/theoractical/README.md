@@ -8,6 +8,7 @@
 4. `prometheus-grafana-loki.md`
 5. `progressive-delivery-canary.md`
 6. `load-testing.md`
+7. `mentor-questions.md` - Vietnamese mentor Q&A practice set for W9 theory
 
 ## Minimum Theory You Must Know
 

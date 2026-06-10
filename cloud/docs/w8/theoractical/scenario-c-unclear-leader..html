@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scenario C - Unclear Leader</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-orange: #fe7624;
+            --brand-orange-light: #f59120;
+            --brand-amber: #fbae42;
+            --brand-yellow: #fcd554;
+            --brand-navy: #1e293b;
+            --brand-navy-mid: #24338a;
+            --brand-blue: #007bc1;
+            --brand-cyan: #00b3d9;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4d4e4e;
+            --text-muted: #698695;
+            --border: #c4d5dd;
+            --border-light: #ebebeb;
+            --surface-white: #ffffff;
+            --surface-100: #fafafa;
+            --surface-card: #f9fafb;
+            --surface-blue: #e3f0f7;
+            --surface-tint: #fff7ec;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+            --h2-size: clamp(1.5rem, 3.5vw, 2.5rem);
+            --h3-size: clamp(1.05rem, 2vw, 1.45rem);
+            --body-size: clamp(0.8rem, 1.15vw, 1.05rem);
+            --small-size: clamp(0.7rem, 0.9vw, 0.85rem);
+            --mono-size: clamp(0.64rem, 0.86vw, 0.82rem);
+            --slide-padding: clamp(1.5rem, 4vw, 4rem);
+            --content-gap: clamp(0.75rem, 1.8vw, 1.8rem);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --radius-pill: 80px;
+            --shadow-card: 0 8px 17px rgba(29, 29, 29, 0.05);
+            --gradient-cta: linear-gradient(135deg, #ffc078 0%, #ff8800 100%);
+            --gradient-warm: linear-gradient(135deg, #fcd554 0%, #fe7624 60%, #f59120 100%);
+            --gradient-cool: linear-gradient(135deg, #007bc1 0%, #24338a 100%);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.65s;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            overflow-x: hidden;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background: var(--surface-100);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: var(--slide-padding);
+            background: var(--surface-white);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            gap: var(--content-gap);
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .slide-content-body {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.5vw, 1.5rem);
+        }
+
+        .slide-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .slide-header h2 {
+            font-size: var(--h2-size);
+            color: var(--brand-navy);
+            line-height: 1.1;
+        }
+
+        .slide-header .lead {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            max-width: 930px;
+            line-height: 1.5;
+        }
+
+        .slide-title {
+            background:
+                radial-gradient(ellipse at 85% 10%, #fcd55466 0%, transparent 55%),
+                radial-gradient(ellipse at 10% 90%, #fe762422 0%, transparent 60%),
+                var(--surface-white);
+            justify-content: center;
+        }
+
+        .title-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 2vw, 1.8rem);
+            max-width: 1180px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-title h1 {
+            font-size: clamp(2.4rem, 6.5vw, 5rem);
+            font-weight: 800;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            color: var(--brand-navy);
+        }
+
+        .gradient-text {
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .slide-title .lead {
+            font-size: clamp(1rem, 1.8vw, 1.4rem);
+            color: var(--text-secondary);
+            max-width: 820px;
+            line-height: 1.5;
+        }
+
+        .brand-mark {
+            position: absolute;
+            top: var(--slide-padding);
+            left: var(--slide-padding);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            color: var(--brand-navy);
+            font-size: clamp(0.8rem, 1.1vw, 1rem);
+            z-index: 2;
+        }
+
+        .brand-mark .logo-shape {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--gradient-cta);
+            display: grid;
+            place-items: center;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .brand-mark small {
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-left: 4px;
+        }
+
+        .slide-divider {
+            background: var(--brand-navy);
+            color: #ffffff;
+            justify-content: center;
+        }
+
+        .slide-divider::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 80% 30%, #fe762433 0%, transparent 55%),
+                radial-gradient(ellipse at 10% 80%, #00b3d922 0%, transparent 55%);
+        }
+
+        .divider-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .divider-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: var(--small-size);
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--brand-amber);
+        }
+
+        .divider-label::before {
+            content: "";
+            width: 32px;
+            height: 2px;
+            background: var(--brand-amber);
+        }
+
+        .section-num {
+            font-size: clamp(6rem, 18vw, 12rem);
+            font-weight: 800;
+            line-height: 0.85;
+            color: transparent;
+            -webkit-text-stroke: 2px #fe7624;
+            letter-spacing: -0.05em;
+        }
+
+        .slide-divider h2 {
+            font-size: clamp(2.25rem, 5.5vw, 4rem);
+            color: #ffffff;
+            font-weight: 800;
+            line-height: 1;
+            max-width: 1050px;
+        }
+
+        .slide-divider .accent { color: var(--brand-amber); }
+
+        .divider-sub {
+            font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+            color: #c4d5dd;
+            max-width: 760px;
+            line-height: 1.5;
+        }
+
+        .slide-closing {
+            background:
+                radial-gradient(ellipse at 70% 80%, #fe762422 0%, transparent 55%),
+                radial-gradient(ellipse at 20% 20%, #fcd55433 0%, transparent 55%),
+                var(--surface-white);
+            justify-content: center;
+        }
+
+        .closing-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.8vw, 1.8rem);
+        }
+
+        .slide-closing h1 {
+            font-size: clamp(2rem, 5.5vw, 4.5rem);
+            color: var(--brand-navy);
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: var(--small-size);
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--brand-orange);
+            padding: 6px 14px;
+            background: #ffd6a233;
+            border-radius: var(--radius-pill);
+            align-self: flex-start;
+        }
+
+        .eyebrow .dot,
+        .meta-chip .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--brand-orange);
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
+            align-items: center;
+            margin-top: clamp(0.5rem, 1vw, 1rem);
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6em;
+            padding: 10px 22px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
+            background: var(--surface-white);
+            font-weight: 600;
+            font-size: var(--small-size);
+            color: var(--brand-navy);
+            box-shadow: var(--shadow-card);
+        }
+
+        .meta-chip.primary {
+            background: var(--gradient-cta);
+            color: #ffffff;
+            border-color: transparent;
+        }
+
+        .meta-chip.primary .dot { background: #ffffff; }
+
+        .grid {
+            display: grid;
+            gap: clamp(0.75rem, 1.2vw, 1.25rem);
+        }
+
+        .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 2vw, 2rem);
+            align-items: stretch;
+        }
+
+        .card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: clamp(0.85rem, 1.4vw, 1.4rem);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.35rem, 0.8vw, 0.75rem);
+            min-width: 0;
+        }
+
+        .card-accent {
+            border-color: var(--brand-orange-light);
+            background: linear-gradient(180deg, #ffffff 0%, #fff7ec 100%);
+        }
+
+        .card-dark {
+            background: var(--brand-navy);
+            border-color: var(--brand-navy);
+            color: #ffffff;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: var(--body-size);
+            color: var(--brand-navy);
+        }
+
+        .card-dark .card-title { color: #ffffff; }
+
+        .card-val {
+            font-size: var(--h3-size);
+            font-weight: 800;
+            color: var(--brand-orange);
+            line-height: 1.15;
+        }
+
+        .card-desc,
+        .card-body {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .card-dark .card-body,
+        .card-dark .card-desc { color: #c4d5dd; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: var(--small-size);
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            background: var(--surface-blue);
+            color: var(--brand-blue);
+            letter-spacing: 0.04em;
+            align-self: flex-start;
+        }
+
+        .badge-amber { background: #ffd6a233; color: var(--brand-orange); }
+        .badge-green { background: #92c83e22; color: #008a42; }
+        .badge-purple { background: #85439a22; color: #85439a; }
+        .badge-cyan { background: #00b3d922; color: #007a99; }
+
+        .bullets {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.4rem, 0.9vw, 0.8rem);
+            list-style: none;
+        }
+
+        .bullets li {
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+            font-size: var(--body-size);
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .bullets.compact li { font-size: var(--small-size); }
+
+        .bullets li::before {
+            content: "";
+            flex-shrink: 0;
+            width: 8px;
+            height: 8px;
+            margin-top: 0.55em;
+            border-radius: 2px;
+            background: var(--gradient-warm);
+        }
+
+        .bullets li strong { color: var(--brand-navy); font-weight: 700; }
+        .card-dark .bullets li { color: #e2e8f0; }
+        .card-dark .bullets li strong { color: #ffffff; }
+
+        .flow {
+            display: flex;
+            align-items: stretch;
+            gap: clamp(0.4rem, 0.8vw, 0.8rem);
+            flex-wrap: nowrap;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 0;
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: clamp(0.5rem, 1vw, 1rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .flow-num {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--brand-orange);
+            font-weight: 700;
+        }
+
+        .flow-title {
+            font-size: var(--body-size);
+            font-weight: 700;
+            color: var(--brand-navy);
+        }
+
+        .flow-body {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            color: var(--brand-orange);
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.75rem, 1.5vw, 1.5rem);
+        }
+
+        .stat {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: clamp(1rem, 1.8vw, 1.8rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .stat.featured {
+            background: var(--brand-navy);
+            border-color: var(--brand-navy);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat.featured::after {
+            content: "";
+            position: absolute;
+            inset: auto -20% -40% auto;
+            width: 80%;
+            height: 80%;
+            background: var(--gradient-cta);
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.35;
+        }
+
+        .big-num {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1;
+            background: var(--gradient-warm);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-label {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-body {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.4;
+            position: relative;
+            z-index: 1;
+        }
+
+        .featured .stat-label { color: #c4d5dd; }
+        .featured .stat-body { color: #ffffff; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--small-size);
+            background: var(--surface-white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        th, td {
+            padding: clamp(0.5rem, 0.9vw, 0.85rem) clamp(0.6rem, 1.2vw, 1.1rem);
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+
+        th {
+            background: var(--brand-navy);
+            color: #ffffff;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        tbody tr:nth-child(even) { background: var(--surface-card); }
+        td strong { color: var(--brand-navy); font-weight: 700; }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            background: rgba(30, 41, 59, 0.07);
+            color: var(--brand-navy);
+            padding: 1px 6px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .code-block {
+            background: var(--brand-navy);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: clamp(0.8rem, 1.2vw, 1.2rem);
+            font-family: var(--font-mono);
+            font-size: var(--mono-size);
+            color: #e2e8f0;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+            box-shadow: var(--shadow-card);
+        }
+
+        .kw { color: #ff8800; font-weight: 700; }
+        .str { color: #34d399; }
+        .fn { color: #60a5fa; }
+        .cmt { color: #94a3b8; }
+
+        .callout {
+            border-radius: var(--radius-md);
+            padding: clamp(0.8rem, 1.2vw, 1.2rem);
+            border: 1px solid var(--border);
+            background: var(--surface-card);
+            font-size: var(--body-size);
+            line-height: 1.5;
+        }
+
+        .callout strong { color: var(--brand-navy); }
+        .callout-amber { background: #fff7ec; border-color: #fbae42; }
+        .callout-blue { background: #e3f0f7; border-color: #7bbce1; }
+        .callout-dark { background: var(--brand-navy); color: #ffffff; border-color: var(--brand-navy); }
+        .callout-dark strong { color: var(--brand-amber); }
+
+        .def-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.7rem, 1vw, 1rem);
+        }
+
+        .def-row {
+            display: grid;
+            grid-template-columns: minmax(120px, 170px) minmax(0, 1fr);
+            gap: clamp(0.75rem, 1vw, 1rem);
+            align-items: start;
+        }
+
+        .def-row + .def-row {
+            border-top: 1px solid var(--border-light);
+            padding-top: clamp(0.65rem, 0.9vw, 0.9rem);
+        }
+
+        .def-term {
+            font-size: var(--small-size);
+            font-weight: 800;
+            color: var(--brand-orange);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .def-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: clamp(0.75rem, 1.2vw, 1.25rem);
+        }
+
+        .timeline-card {
+            border-left: 4px solid var(--brand-orange);
+            background: var(--surface-card);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: clamp(0.85rem, 1.3vw, 1.3rem);
+            box-shadow: var(--shadow-card);
+        }
+
+        .timeline-time {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--brand-blue);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .timeline-title {
+            color: var(--brand-navy);
+            font-weight: 800;
+            font-size: var(--body-size);
+            margin-bottom: 0.35rem;
+        }
+
+        .timeline-body {
+            color: var(--text-secondary);
+            font-size: var(--small-size);
+            line-height: 1.45;
+        }
+
+        .swimlane {
+            display: grid;
+            grid-template-columns: 145px repeat(3, minmax(0, 1fr));
+            gap: 1px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            background: var(--border);
+        }
+
+        .swimlane > div {
+            background: #ffffff;
+            padding: clamp(0.55rem, 0.9vw, 0.85rem);
+            font-size: var(--small-size);
+            line-height: 1.4;
+        }
+
+        .swimlane .head {
+            background: var(--brand-navy);
+            color: #ffffff;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .swimlane .role {
+            color: var(--brand-navy);
+            font-weight: 800;
+            background: #fff7ec;
+        }
+
+        .rule-banner {
+            background: var(--brand-navy);
+            color: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: clamp(1rem, 2vw, 2rem);
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(240px, 0.6fr);
+            gap: clamp(1rem, 2vw, 2rem);
+            align-items: center;
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .rule-banner::after {
+            content: "";
+            position: absolute;
+            right: -12%;
+            bottom: -45%;
+            width: 45%;
+            height: 110%;
+            border-radius: 50%;
+            background: var(--gradient-cta);
+            opacity: 0.35;
+            filter: blur(22px);
+        }
+
+        .rule-banner h3 {
+            font-size: clamp(1.5rem, 4vw, 3.2rem);
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rule-banner p {
+            color: #c4d5dd;
+            font-size: var(--body-size);
+            line-height: 1.5;
+            margin-top: 0.65rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rule-chip {
+            position: relative;
+            z-index: 1;
+            justify-self: end;
+            font-family: var(--font-mono);
+            font-size: clamp(1rem, 2.1vw, 1.6rem);
+            font-weight: 800;
+            color: var(--brand-navy);
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            text-align: center;
+        }
+
+        .slide-footer {
+            position: absolute;
+            left: var(--slide-padding);
+            right: var(--slide-padding);
+            bottom: clamp(0.8rem, 1.6vw, 1.5rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: var(--small-size);
+            pointer-events: none;
+        }
+
+        .section-tag,
+        .trainer-tag {
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid var(--border-light);
+        }
+
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(196, 213, 221, 0.5);
+            z-index: 20;
+        }
+
+        .progress {
+            width: 0;
+            height: 100%;
+            background: var(--gradient-cta);
+            transition: width 0.35s ease;
+        }
+
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.6rem, 1.4vw, 1.2rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 15;
+        }
+
+        .nav-dots button {
+            width: 9px;
+            height: 9px;
+            border: 1px solid rgba(30, 41, 59, 0.45);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .nav-dots button.active {
+            background: var(--brand-orange);
+            border-color: var(--brand-orange);
+            transform: scale(1.35);
+        }
+
+        .counter {
+            position: fixed;
+            right: clamp(1rem, 2vw, 2rem);
+            bottom: clamp(0.8rem, 1.6vw, 1.5rem);
+            z-index: 16;
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            padding: 6px 12px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .counter strong { color: var(--brand-navy); }
+
+        .reveal,
+        .stagger > * {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo), transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .visible .reveal,
+        .visible .stagger > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .visible .stagger > *:nth-child(2) { transition-delay: 0.08s; }
+        .visible .stagger > *:nth-child(3) { transition-delay: 0.16s; }
+        .visible .stagger > *:nth-child(4) { transition-delay: 0.24s; }
+        .visible .stagger > *:nth-child(5) { transition-delay: 0.32s; }
+
+        @media (max-width: 920px) {
+            .slide {
+                overflow-y: auto;
+                min-height: 100dvh;
+                height: auto;
+            }
+
+            .slide-content { overflow: visible; }
+            .grid-3, .grid-4, .stat-grid, .timeline { grid-template-columns: 1fr; }
+            .grid-2, .two-col, .rule-banner { grid-template-columns: 1fr; }
+            .flow { flex-direction: column; }
+            .flow-arrow { justify-content: center; transform: rotate(90deg); }
+            .rule-chip { justify-self: stretch; }
+            .swimlane {
+                grid-template-columns: 120px repeat(3, minmax(160px, 1fr));
+                overflow-x: auto;
+            }
+            .nav-dots { display: none; }
+            .counter { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-container"><div class="progress" id="progress"></div></div>
+    <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+    <div class="counter" id="counter"><strong>01</strong> / 12</div>
+
+    <section class="slide slide-title">
+        <div class="brand-mark">
+            <span class="logo-shape">PM</span>
+            Project Management <small>Scenario Clinic</small>
+        </div>
+        <div class="title-wrap">
+            <span class="eyebrow reveal"><span class="dot"></span>Sprint 2 · Day 2</span>
+            <h1 class="reveal">
+                Scenario C -<br>
+                <span class="gradient-text">Unclear Leader</span>
+            </h1>
+            <p class="lead reveal">
+                Leadership failure, team misalignment, and emergency re-alignment after task assignment moved from Jira into Slack.
+            </p>
+            <div class="meta-row reveal">
+                <span class="meta-chip primary"><span class="dot"></span>No Jira Ticket = No Task</span>
+                <span class="meta-chip"><span class="dot"></span>For PMs, Scrum Masters, Team Leads, Agile Coaches, and Delivery Teams</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Case Frame</span>
+                <h2>What happened in Sprint 2?</h2>
+                <p class="lead">The problem is not effort or intent. The failure is that work entered the sprint without a governed source of truth.</p>
+            </div>
+            <div class="timeline stagger">
+                <div class="timeline-card">
+                    <div class="timeline-time">09:10</div>
+                    <div class="timeline-title">Leader posts in Slack</div>
+                    <div class="timeline-body">Assignments are shared as chat messages, not Jira tickets with acceptance criteria and ownership.</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-time">10:25</div>
+                    <div class="timeline-title">Dev1 starts wrong path</div>
+                    <div class="timeline-body">A vague request is interpreted differently from what the leader intended.</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-time">11:40</div>
+                    <div class="timeline-title">Dev2 refactors</div>
+                    <div class="timeline-body">Refactoring begins without official assignment, priority check, or sprint impact review.</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-time">13:30</div>
+                    <div class="timeline-title">QA writes early tests</div>
+                    <div class="timeline-body">QA prepares tests for a feature that has not been built and may not match the final scope.</div>
+                </div>
+            </div>
+            <div class="callout callout-amber reveal">
+                <strong>Key diagnosis:</strong> nobody is obviously wrong. The system allowed reasonable people to make incompatible decisions.
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 01 · Situation</span><span class="trainer-tag">Slide 02</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Leadership Failure</span>
+                <h2>The root cause is unclear task governance.</h2>
+                <p class="lead">Slack is useful for discussion, clarification, and escalation. Jira is the operating record for committed sprint work.</p>
+            </div>
+            <div class="stat-grid stagger">
+                <div class="stat">
+                    <div class="big-num">1</div>
+                    <div class="stat-label">Source of truth</div>
+                    <div class="stat-body">The team needs one place where task scope, owner, priority, status, and acceptance criteria are visible.</div>
+                </div>
+                <div class="stat featured">
+                    <div class="big-num">0</div>
+                    <div class="stat-label">Intentional faults</div>
+                    <div class="stat-body">The PM should avoid blaming individuals and focus on closing the process gap immediately.</div>
+                </div>
+                <div class="stat">
+                    <div class="big-num">3</div>
+                    <div class="stat-label">Misaligned streams</div>
+                    <div class="stat-body">Dev1, Dev2, and QA are all productive locally but disconnected from the sprint plan globally.</div>
+                </div>
+            </div>
+            <div class="rule-banner reveal">
+                <div>
+                    <h3>No Jira Ticket = No Task</h3>
+                    <p>Chat can trigger discussion, but work starts only after the ticket exists, has an owner, and has enough definition to verify done.</p>
+                </div>
+                <div class="rule-chip">Slack != Assignment</div>
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 01 · Diagnosis</span><span class="trainer-tag">Slide 03</span></div>
+    </section>
+
+    <section class="slide slide-divider">
+        <div class="divider-wrap">
+            <span class="divider-label">Block 02</span>
+            <div class="section-num">02</div>
+            <h2>Analyze the <span class="accent">misalignment</span>.</h2>
+            <p class="divider-sub">Before fixing work, the Project Manager must identify how each role drifted and what decision record was missing.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Impact Map</span>
+                <h2>Each person acted from incomplete information.</h2>
+                <p class="lead">This is the moment where a leader must separate intent from impact. The response should be calm, specific, and documented.</p>
+            </div>
+            <div class="grid grid-3 stagger">
+                <div class="card">
+                    <span class="badge badge-amber">Dev1</span>
+                    <div class="card-title">Wrong direction</div>
+                    <div class="card-desc">The task was vague, so Dev1 filled in missing context and built toward a different outcome.</div>
+                    <ul class="bullets compact">
+                        <li><strong>Impact:</strong> rework risk</li>
+                        <li><strong>Need:</strong> clear acceptance criteria</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="badge badge-purple">Dev2</span>
+                    <div class="card-title">Unassigned refactor</div>
+                    <div class="card-desc">Refactoring may be valuable, but it bypassed sprint priority and capacity control.</div>
+                    <ul class="bullets compact">
+                        <li><strong>Impact:</strong> hidden scope growth</li>
+                        <li><strong>Need:</strong> backlog decision</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <span class="badge badge-cyan">QA</span>
+                    <div class="card-title">Premature testing</div>
+                    <div class="card-desc">QA created tests before the feature behavior was committed and implemented.</div>
+                    <ul class="bullets compact">
+                        <li><strong>Impact:</strong> invalid test effort</li>
+                        <li><strong>Need:</strong> confirmed ready-for-test signal</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="callout callout-blue reveal">
+                <strong>PM stance:</strong> "I created ambiguity by assigning work outside Jira. We will stop, align, and restart from the board."
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 02 · Role Impact</span><span class="trainer-tag">Slide 05</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Decision Record</span>
+                <h2>What was missing from Jira?</h2>
+                <p class="lead">A good ticket reduces interpretation variance. It makes scope reviewable before the team spends effort.</p>
+            </div>
+            <div class="two-col stagger">
+                <div class="card card-accent">
+                    <div class="card-title">Missing ticket fields</div>
+                    <div class="def-list">
+                        <div class="def-row"><div class="def-term">Owner</div><div class="def-desc">Who is accountable for doing the work now.</div></div>
+                        <div class="def-row"><div class="def-term">Outcome</div><div class="def-desc">What user or system behavior must change.</div></div>
+                        <div class="def-row"><div class="def-term">Acceptance</div><div class="def-desc">Observable conditions for Done and QA validation.</div></div>
+                        <div class="def-row"><div class="def-term">Priority</div><div class="def-desc">Why this task belongs in Sprint 2 ahead of other work.</div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Ambiguity test</div>
+                    <ul class="bullets">
+                        <li>Can two developers read the ticket and build the same outcome?</li>
+                        <li>Can QA derive tests without guessing feature behavior?</li>
+                        <li>Can the Scrum Master see whether the task is sprint work or backlog work?</li>
+                        <li>Can the Product Owner confirm whether the task supports sprint goals?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 02 · Governance Gap</span><span class="trainer-tag">Slide 06</span></div>
+    </section>
+
+    <section class="slide slide-divider">
+        <div class="divider-wrap">
+            <span class="divider-label">Block 03</span>
+            <div class="section-num">03</div>
+            <h2>Run the <span class="accent">emergency re-alignment</span>.</h2>
+            <p class="divider-sub">The leader owns the mistake immediately, pauses ambiguous work, and restores Jira as the source of truth.</p>
+        </div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Immediate Response</span>
+                <h2>The first 30 minutes are procedural, not emotional.</h2>
+                <p class="lead">Move quickly, keep the tone neutral, and make every decision visible to the whole team.</p>
+            </div>
+            <div class="flow stagger">
+                <div class="flow-step">
+                    <div class="flow-num">01</div>
+                    <div class="flow-title">Pause work</div>
+                    <div class="flow-body">Ask Dev1, Dev2, and QA to stop current direction until tickets are clarified.</div>
+                </div>
+                <div class="flow-arrow">›</div>
+                <div class="flow-step">
+                    <div class="flow-num">02</div>
+                    <div class="flow-title">Own mistake</div>
+                    <div class="flow-body">Leader states that Slack assignment created the ambiguity and will be corrected.</div>
+                </div>
+                <div class="flow-arrow">›</div>
+                <div class="flow-step">
+                    <div class="flow-num">03</div>
+                    <div class="flow-title">Create tickets</div>
+                    <div class="flow-body">Convert each work item into Jira with owner, outcome, priority, and acceptance criteria.</div>
+                </div>
+                <div class="flow-arrow">›</div>
+                <div class="flow-step">
+                    <div class="flow-num">04</div>
+                    <div class="flow-title">Restart from board</div>
+                    <div class="flow-body">Only assigned Jira tickets proceed. Unapproved refactor goes to backlog or gets explicit approval.</div>
+                </div>
+            </div>
+            <div class="callout callout-dark reveal">
+                <strong>Leadership script:</strong> "The confusion came from my assignment method. We are moving every task into Jira now, confirming owners, and restarting from the sprint board."
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 03 · Emergency Action</span><span class="trainer-tag">Slide 08</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Re-Alignment Meeting</span>
+                <h2>Use a short triage, not a long retrospective.</h2>
+                <p class="lead">The goal is to recover execution today. Root-cause learning can be handled after sprint flow is stable.</p>
+            </div>
+            <div class="swimlane reveal">
+                <div class="head">Role</div>
+                <div class="head">Question</div>
+                <div class="head">Decision</div>
+                <div class="head">Jira update</div>
+                <div class="role">Leader / PM</div>
+                <div>Which tasks are official Sprint 2 work?</div>
+                <div>Approve, defer, or split work items.</div>
+                <div>Create or update tickets and link Slack context.</div>
+                <div class="role">Dev1</div>
+                <div>What has been built and where did interpretation diverge?</div>
+                <div>Keep useful code or discard wrong-path work.</div>
+                <div>Add clear acceptance criteria and implementation notes.</div>
+                <div class="role">Dev2</div>
+                <div>Is the refactor required for sprint delivery?</div>
+                <div>Make it a ticket, defer it, or timebox it.</div>
+                <div>Record scope, risk, and reviewer.</div>
+                <div class="role">QA</div>
+                <div>Which tests match confirmed behavior?</div>
+                <div>Retain reusable cases, archive invalid assumptions.</div>
+                <div>Attach tests to the correct story and status.</div>
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 03 · Team Triage</span><span class="trainer-tag">Slide 09</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Jira Governance</span>
+                <h2>Define the working agreement as executable rules.</h2>
+                <p class="lead">The team should not rely on memory or personality. The workflow should make the right behavior obvious.</p>
+            </div>
+            <div class="two-col stagger">
+                <div class="card">
+                    <div class="card-title">Team rulebook</div>
+                    <ul class="bullets">
+                        <li><strong>No Jira ticket = no task.</strong></li>
+                        <li><strong>Vague task = sender clarifies, receiver asks.</strong></li>
+                        <li>Slack decisions must be summarized into Jira within the same working session.</li>
+                        <li>Unassigned work is backlog work until the board says otherwise.</li>
+                    </ul>
+                </div>
+                <div class="card card-dark">
+                    <div class="card-title">Suggested Jira workflow</div>
+                    <div class="code-block"><span class="kw">Backlog</span>
+  -> <span class="fn">Ready</span>       <span class="cmt">owner + acceptance criteria</span>
+  -> <span class="fn">In Progress</span> <span class="cmt">assigned sprint work only</span>
+  -> <span class="fn">Ready for QA</span> <span class="cmt">feature built and reviewable</span>
+  -> <span class="fn">Done</span>        <span class="cmt">tests passed + evidence linked</span></div>
+                    <p class="card-body">The status gates prevent QA from testing imaginary behavior and prevent developers from silently expanding scope.</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 03 · Jira Rules</span><span class="trainer-tag">Slide 10</span></div>
+    </section>
+
+    <section class="slide">
+        <div class="slide-content slide-content-body">
+            <div class="slide-header reveal">
+                <span class="eyebrow"><span class="dot"></span>Prevention</span>
+                <h2>Prevent recurrence with lightweight controls.</h2>
+                <p class="lead">The fix is not more meetings. It is tighter entry criteria, visible ownership, and faster clarification loops.</p>
+            </div>
+            <table class="reveal">
+                <thead>
+                    <tr>
+                        <th>Control</th>
+                        <th>Owner</th>
+                        <th>Frequency</th>
+                        <th>Success signal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Definition of Ready</strong></td>
+                        <td>PM / Scrum Master</td>
+                        <td>Before sprint commitment</td>
+                        <td>Ticket has owner, value, scope, acceptance criteria, and priority.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Daily board walk</strong></td>
+                        <td>Scrum Master</td>
+                        <td>Daily standup</td>
+                        <td>Every person speaks from Jira status, not from private chat memory.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Slack-to-Jira capture</strong></td>
+                        <td>Message sender</td>
+                        <td>Same working session</td>
+                        <td>Important decisions are linked to the relevant ticket.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Assignment audit</strong></td>
+                        <td>Team Lead</td>
+                        <td>Twice per sprint</td>
+                        <td>No active work exists without an assigned Jira issue.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slide-footer"><span class="section-tag">Block 04 · Prevention</span><span class="trainer-tag">Slide 11</span></div>
+    </section>
+
+    <section class="slide slide-closing">
+        <div class="closing-wrap">
+            <span class="eyebrow reveal"><span class="dot"></span>Final Takeaway</span>
+            <h1 class="reveal">
+                Leadership owns clarity.<br>
+                <span class="gradient-text">The board owns execution.</span>
+            </h1>
+            <div class="grid grid-3 stagger">
+                <div class="card">
+                    <div class="card-title">Analyze</div>
+                    <div class="card-desc">Find the process failure without blaming reasonable individual actions.</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Respond</div>
+                    <div class="card-desc">Pause, own the mistake, convert work into Jira, and restart from the board.</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Prevent</div>
+                    <div class="card-desc">Use Definition of Ready, assignment audits, and Slack-to-Jira capture rules.</div>
+                </div>
+            </div>
+            <div class="meta-row reveal">
+                <span class="meta-chip primary"><span class="dot"></span>No Jira Ticket = No Task</span>
+                <span class="meta-chip"><span class="dot"></span>Vague task = sender clarifies, receiver asks</span>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = [...document.querySelectorAll('.slide')];
+                this.currentSlide = 0;
+                this.progressBar = document.getElementById('progress');
+                this.navDotsContainer = document.getElementById('navDots');
+                this.counter = document.getElementById('counter');
+                this.setupNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupTouchNav();
+                this.setupWheelNav();
+                this.slides[0].classList.add('visible');
+                this.updateCounter(0);
+                this.updateProgress();
+            }
+
+            setupNavDots() {
+                this.navDotsContainer.innerHTML = '';
+                this.slides.forEach((_, i) => {
+                    const btn = document.createElement('button');
+                    btn.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    btn.addEventListener('click', () => this.goTo(i));
+                    this.navDotsContainer.appendChild(btn);
+                });
+                this.updateActiveDot(0);
+            }
+
+            setupIntersectionObserver() {
+                const obs = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const idx = this.slides.indexOf(entry.target);
+                            if (idx >= 0) {
+                                this.currentSlide = idx;
+                                this.updateCounter(idx);
+                                this.updateProgress();
+                                this.updateActiveDot(idx);
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 });
+                this.slides.forEach((slide) => obs.observe(slide));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case 'ArrowDown':
+                        case 'ArrowRight':
+                        case 'PageDown':
+                        case ' ':
+                            e.preventDefault();
+                            this.next();
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowLeft':
+                        case 'PageUp':
+                            e.preventDefault();
+                            this.prev();
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goTo(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goTo(this.slides.length - 1);
+                            break;
+                    }
+                });
+            }
+
+            setupTouchNav() {
+                let startY = 0;
+                document.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+                document.addEventListener('touchend', (e) => {
+                    const delta = startY - e.changedTouches[0].clientY;
+                    if (Math.abs(delta) > 60) {
+                        if (delta > 0) this.next();
+                        else this.prev();
+                    }
+                }, { passive: true });
+            }
+
+            setupWheelNav() {
+                let busy = false;
+                document.addEventListener('wheel', (e) => {
+                    if (busy || Math.abs(e.deltaY) < 30) return;
+                    busy = true;
+                    setTimeout(() => { busy = false; }, 600);
+                    if (e.deltaY > 0) this.next();
+                    else this.prev();
+                }, { passive: true });
+            }
+
+            next() { this.goTo(Math.min(this.currentSlide + 1, this.slides.length - 1)); }
+            prev() { this.goTo(Math.max(this.currentSlide - 1, 0)); }
+            goTo(idx) { this.slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+            updateActiveDot(idx) {
+                const dots = this.navDotsContainer.querySelectorAll('button');
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+            }
+
+            updateCounter(idx) {
+                const total = String(this.slides.length).padStart(2, '0');
+                const current = String(idx + 1).padStart(2, '0');
+                this.counter.innerHTML = `<strong>${current}</strong> / ${total}`;
+            }
+
+            updateProgress() {
+                const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+                this.progressBar.style.width = pct + '%';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { new SlidePresentation(); });
+    </script>
+</body>
+</html>
