@@ -91,22 +91,31 @@ Verified in `us-east-1` on June 12, 2026:
 
 ## Evidence Checklist
 
-Save screenshots in `evidence/` using these names:
+Evidence currently captured:
 
-| Evidence | Suggested filename |
+| Evidence | File | Assessment |
+| --- | --- | --- |
+| EC2 instance running with the expected IAM role | [`evidence/ec2-instance-and-iam-role.png`](evidence/ec2-instance-and-iam-role.png) | Complete |
+| SSM Session Manager online and connected | [`evidence/ssm-session-manager-online.png`](evidence/ssm-session-manager-online.png) | Complete |
+| CloudWatch `CWAgent` namespace containing seven metrics | [`evidence/cloudwatch-cwagent-namespace.png`](evidence/cloudwatch-cwagent-namespace.png) | Complete |
+| `disk_used_percent` metrics for the lab instance | [`evidence/cloudwatch-disk-metrics.png`](evidence/cloudwatch-disk-metrics.png) | Complete |
+| General CloudWatch ingestion page | [`evidence/cloudwatch-ingestion-overview.png`](evidence/cloudwatch-ingestion-overview.png) | Supplemental only; it does not prove agent ingestion |
+
+Capture these additional screenshots before considering the evidence set
+complete:
+
+| Required evidence | Filename |
 | --- | --- |
-| EC2 instance running with IAM role | `ec2-instance-and-iam-role.png` |
-| IAM role showing `CloudWatchAgentServerPolicy` | `iam-cloudwatch-agent-policy.png` |
-| Systems Manager managed node online | `ssm-managed-node-online.png` |
-| SSM command output showing running/configured/enabled/active | `cloudwatch-agent-status.png` |
-| CloudWatch `CWAgent` namespace and metric list | `cloudwatch-agent-metrics.png` |
-| Graph for `mem_used_percent` or `disk_used_percent` | `cloudwatch-agent-metric-graph.png` |
-| CloudWatch Logs group and instance log stream | `cloudwatch-agent-log-stream.png` |
-| Terminal showing Terraform `No changes` | `terraform-plan-no-changes.png` |
+| IAM role Permissions tab showing `CloudWatchAgentServerPolicy` | `iam-cloudwatch-agent-policy.png` |
+| `verify.ps1` output showing `running`, `configured`, `enabled`, and `active` | `cloudwatch-agent-status.png` |
+| A rendered graph for `mem_used_percent` or `disk_used_percent` | `cloudwatch-agent-metric-graph.png` |
+| CloudWatch Logs group with stream `i-059488135b121ddcf` | `cloudwatch-agent-log-stream.png` |
 
-The first six screenshots are sufficient for the core lab. The log stream and
-Terraform plan screenshots provide stronger evidence that log collection and
-Infrastructure as Code both work.
+Optional stronger Infrastructure as Code evidence:
+
+| Optional evidence | Filename |
+| --- | --- |
+| Terminal showing Terraform `No changes` | `terraform-plan-no-changes.png` |
 
 ## Useful Manual Commands
 
