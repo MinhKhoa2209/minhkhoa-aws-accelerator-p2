@@ -1,0 +1,20 @@
+param(
+    [string]$Profile = "default",
+    [string]$Region = "us-east-1"
+)
+
+$ErrorActionPreference = "Stop"
+Set-StrictMode -Version Latest
+
+$LabRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+Set-Location $LabRoot
+
+terraform init
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+terraform destroy `
+    -auto-approve `
+    -var "aws_profile=$Profile" `
+    -var "aws_region=$Region"
+
+exit $LASTEXITCODE

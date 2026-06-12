@@ -17,6 +17,10 @@ cloud/w9/
   day-b/      Observability, SLOs, SLIs, and burn-rate alerts
   day-c/      Progressive delivery with Argo Rollouts
   lab/        End-to-end W9 lab over the W8 platform
+  monitoring-lab/
+              EC2 CPU alarm and SNS email notification lab
+  cloudwatch-agent-lab/
+              CloudWatch Agent metrics and logs on EC2
   reflection.md
 ```
 
@@ -26,6 +30,8 @@ cloud/w9/
 2. Complete `day-b`: define service indicators, install telemetry plumbing, and add alert rules.
 3. Complete `day-c`: replace a plain Deployment with an Argo Rollout and Prometheus analysis.
 4. Complete `lab`: GitOps-ify the W8 app, bolt on observability, and prove canary abort behavior.
+5. Complete `monitoring-lab`: monitor EC2 CPU with CloudWatch and send alarm/recovery emails through SNS.
+6. Complete `cloudwatch-agent-lab`: install the CloudWatch Agent and publish EC2 memory, disk, swap, and log data.
 
 ## Lab Helper
 
@@ -46,6 +52,12 @@ Useful modes:
 ```
 
 Evidence notes live in `cloud/w9/lab/evidence/`.
+
+The standalone AWS monitoring lab is documented in
+`cloud/w9/monitoring-lab/README.md`.
+
+The CloudWatch Agent lab is documented in
+`cloud/w9/cloudwatch-agent-lab/README.md`.
 
 ## Study Docs
 

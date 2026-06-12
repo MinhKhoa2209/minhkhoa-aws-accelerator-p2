@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf install -y amazon-cloudwatch-agent
+
+echo '${agent_config_base64}' | base64 --decode \
+  > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -s \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+
+systemctl enable amazon-cloudwatch-agent
+
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -m ec2 \
+  -a status
