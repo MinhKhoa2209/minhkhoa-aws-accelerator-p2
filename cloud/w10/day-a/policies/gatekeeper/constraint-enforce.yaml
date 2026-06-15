@@ -1,0 +1,20 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredOwnerLabel
+metadata:
+  name: required-owner-label
+spec:
+  enforcementAction: deny
+  match:
+    scope: Namespaced
+    namespaces:
+      - w10-rbac-lab
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+      - apiGroups: ["batch"]
+        kinds: ["Job", "CronJob"]
+  parameters:
+    labels:
+      - owner

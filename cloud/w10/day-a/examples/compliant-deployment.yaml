@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: owner-label-compliant
+  namespace: w10-rbac-lab
+  labels:
+    owner: platform-team
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: owner-label-compliant
+  template:
+    metadata:
+      labels:
+        app: owner-label-compliant
+        owner: platform-team
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
