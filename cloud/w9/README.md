@@ -21,6 +21,8 @@ cloud/w9/
               EC2 CPU alarm and SNS email notification lab
   cloudwatch-agent-lab/
               CloudWatch Agent metrics and logs on EC2
+  root-login-alert-lab/
+              CloudTrail root account activity alert through SNS
   reflection.md
 ```
 
@@ -32,6 +34,7 @@ cloud/w9/
 4. Complete `lab`: GitOps-ify the W8 app, bolt on observability, and prove canary abort behavior.
 5. Complete `monitoring-lab`: monitor EC2 CPU with CloudWatch and send alarm/recovery emails through SNS.
 6. Complete `cloudwatch-agent-lab`: install the CloudWatch Agent and publish EC2 memory, disk, swap, and log data.
+7. Complete `root-login-alert-lab`: detect root account activity with CloudTrail, a metric filter, an alarm, and SNS.
 
 ## Lab Helper
 
@@ -58,6 +61,9 @@ The standalone AWS monitoring lab is documented in
 
 The CloudWatch Agent lab is documented in
 `cloud/w9/cloudwatch-agent-lab/README.md`.
+
+The root account login alert lab is documented in
+`cloud/w9/root-login-alert-lab/README.md`.
 
 ## Study Docs
 

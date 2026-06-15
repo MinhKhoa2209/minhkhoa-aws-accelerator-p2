@@ -1,0 +1,5 @@
+aws_region        = "us-east-1"
+aws_profile       = "default"
+project_name      = "xbrain-root-login-alert"
+alert_email       = "security-team@example.com"
+log_retention_days = 30
