@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signed-image-demo
+  namespace: w10-supply-chain-lab
+  labels:
+    app: signed-image-demo
+    owner: platform-team
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signed-image-demo
+  template:
+    metadata:
+      labels:
+        app: signed-image-demo
+        owner: platform-team
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/minhkhoa2209/minhkhoa-aws-accelerator-p2/w8-announcement-app:<signed-sha>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 10001
+            capabilities:
+              drop:
+                - ALL

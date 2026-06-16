@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secret-rotation-client
+  namespace: w10-secrets-lab
+  labels:
+    app: secret-rotation-client
+    owner: platform-team
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secret-rotation-client
+  template:
+    metadata:
+      labels:
+        app: secret-rotation-client
+        owner: platform-team
+    spec:
+      serviceAccountName: w10-eso-reader
+      containers:
+        - name: client
+          image: busybox:1.36
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                date
+                echo "ROTATION_VERSION=${ROTATION_VERSION:-missing}"
+                sleep 30
+              done
+          envFrom:
+            - secretRef:
+                name: announcement-app-runtime
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi

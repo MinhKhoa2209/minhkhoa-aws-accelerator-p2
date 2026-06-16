@@ -26,3 +26,17 @@ Day 1 đã triển khai:
 - quy trình bật audit trước, enforce sau
 
 Thực hành tại [`day-a/README.md`](day-a/README.md).
+
+## Day 2
+
+Day 2 đã scaffold và kiểm tra artifact cho:
+
+- AWS Secrets Manager + External Secrets Operator
+- secret refresh mỗi 30 giây
+- workload demo đọc Kubernetes Secret runtime
+- Trivy filesystem scan và image scan trong CI
+- Cosign keyless signing bằng GitHub OIDC
+- Kyverno `verifyImages` enforce image đã ký
+- template exception CVE có owner và ngày hết hạn
+
+Thực hành tại [`day-b/README.md`](day-b/README.md).
