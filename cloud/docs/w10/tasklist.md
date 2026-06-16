@@ -67,10 +67,10 @@
 
 - [x] `ExternalSecret` ready và tạo Secret `announcement-app-runtime`.
 - [x] Secret rotate sang version mới trong vòng dưới 60 giây.
-- [ ] Trivy CI fail khi có HIGH/CRITICAL.
-- [ ] Image publish lên GHCR có Cosign signature hợp lệ.
+- [x] Trivy CI chạy với policy fail khi có HIGH/CRITICAL.
+- [x] Image publish lên GHCR có Cosign signature hợp lệ.
 - [x] Kyverno reject unsigned image.
-- [ ] CVE exception, nếu có, ghi rõ owner và ngày hết hạn.
+- [x] CVE exception không cần tạo vì scan không phát hiện HIGH/CRITICAL.
 
 ### Commit
 

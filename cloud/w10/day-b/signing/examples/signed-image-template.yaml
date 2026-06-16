@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/minhkhoa2209/minhkhoa-aws-accelerator-p2/w8-announcement-app:<signed-sha>
+          image: ghcr.io/minhkhoa2209/minhkhoa-aws-accelerator-p2/w8-announcement-app:460f4459ab46435d37bce8bfbdcc3901bdff9069
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
