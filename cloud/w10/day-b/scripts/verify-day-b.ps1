@@ -63,7 +63,7 @@ Add-Check "Kyverno checks Sigstore Rekor" ($kyverno -match "https://rekor.sigsto
 Add-Check "Kyverno scopes GHCR image references" ($kyverno -match "ghcr.io/minhkhoa2209/\*") "ghcr.io/minhkhoa2209/*"
 
 $workflow = Read-Text "ci-trivy\trivy-cosign.yml"
-Add-Check "Trivy fails HIGH/CRITICAL" (($workflow -match "severity:\s*HIGH,CRITICAL") -and ($workflow -match 'exit-code:\s*"1"')) "severity HIGH,CRITICAL and exit-code 1"
+Add-Check "Trivy fails HIGH/CRITICAL" (($workflow -match "HIGH,CRITICAL") -and (($workflow -match 'exit-code:\s*"1"') -or ($workflow -match "--exit-code\s+1"))) "severity HIGH,CRITICAL and exit-code 1"
 Add-Check "Workflow has Cosign signing" ($workflow -match "cosign sign --yes") "cosign sign --yes"
 Add-Check "Workflow has OIDC permission" ($workflow -match "id-token:\s*write") "id-token write"
 

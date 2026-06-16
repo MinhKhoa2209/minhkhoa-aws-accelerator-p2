@@ -29,15 +29,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Trivy
+        uses: aquasecurity/setup-trivy@v0.3.1
+
       - name: Trivy filesystem scan
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          scan-type: fs
-          scan-ref: cloud/w8/day-2
-          severity: HIGH,CRITICAL
-          ignore-unfixed: true
-          exit-code: "1"
-          format: table
+        run: trivy fs --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 cloud/w8/day-2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -51,14 +47,14 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: Trivy image scan
-        uses: aquasecurity/trivy-action@v0.36.0
-        with:
-          image-ref: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-          severity: HIGH,CRITICAL
-          ignore-unfixed: true
-          exit-code: "1"
-          format: sarif
-          output: trivy-results.sarif
+        run: |
+          trivy image \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            --exit-code 1 \
+            --format sarif \
+            --output trivy-results.sarif \
+            "${IMAGE_NAME}:${IMAGE_TAG}"
 
       - name: Upload Trivy SARIF
         if: always()
