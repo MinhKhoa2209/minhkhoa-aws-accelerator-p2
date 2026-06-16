@@ -24,7 +24,7 @@ function Read-Text {
 
 $requiredFiles = @(
     "README.md",
-    "DAY_B_SCRIPT.md",
+    "..\..\docs\w10\DAY_B_SCRIPT.md",
     "eso\kustomization.yaml",
     "eso\secretstore.yaml",
     "eso\external-secret.yaml",

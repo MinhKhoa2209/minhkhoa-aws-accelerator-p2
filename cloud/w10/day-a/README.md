@@ -115,4 +115,5 @@ Chỉ enforce sau khi đã sửa workload và rà soát exception.
 
 ## Tài liệu
 
-Xem [`cloud/docs/w10/day1-rbac-admission-policy.md`](../../docs/w10/day1-rbac-admission-policy.md).
+- [Kịch bản giải thích chi tiết Day A](../../docs/w10/DAY_A_SCRIPT.md)
+- [Tài liệu self-study](../../docs/w10/day1-rbac-admission-policy.md)
