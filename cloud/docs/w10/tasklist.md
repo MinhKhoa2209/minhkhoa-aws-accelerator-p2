@@ -105,12 +105,12 @@
 ### Evidence cần hoàn thành trên cluster
 
 - [x] `kubectl kustomize cloud/w10/day-c/guardrails` render thành công.
-- [ ] ResourceQuota, LimitRange và PodDisruptionBudget tồn tại trong `w8-day-2`.
-- [ ] Workload thiếu label chi phí bị reject.
-- [ ] Service `LoadBalancer` không có exception bị reject.
-- [ ] Argo CD Application `w10-day-c-guardrails` sync guardrails.
+- [x] ResourceQuota, LimitRange và PodDisruptionBudget tồn tại trong `w8-day-2`.
+- [x] Workload thiếu label chi phí bị reject.
+- [x] Service `LoadBalancer` không có exception bị reject.
+- [x] Argo CD Application `w10-day-c-guardrails` sync guardrails.
 - [x] Runbook mô tả rõ khi nào abort rollout và khi nào Git revert.
 
 ### Commit
 
-- [ ] `[W10-D3] platform integration runbook cost guard`
+- [x] `[W10-D3] platform integration runbook cost guard`
