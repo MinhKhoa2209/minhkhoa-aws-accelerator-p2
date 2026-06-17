@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: day-c-loadbalancer-denied
+  namespace: w8-day-2
+  labels:
+    owner: platform-team
+    cost-center: training
+    environment: lab
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: announcement-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

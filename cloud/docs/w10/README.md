@@ -13,5 +13,7 @@ Tài liệu theo ngày:
 - [`tasklist.md`](tasklist.md)
 - [`day1-rbac-admission-policy.md`](day1-rbac-admission-policy.md)
 - [`day2-secrets-supply-chain.md`](day2-secrets-supply-chain.md)
+- [`day3-platform-runbook-cost-guard.md`](day3-platform-runbook-cost-guard.md)
 - [`../../w10/day-a/README.md`](../../w10/day-a/README.md)
 - [`../../w10/day-b/README.md`](../../w10/day-b/README.md)
+- [`../../w10/day-c/README.md`](../../w10/day-c/README.md)

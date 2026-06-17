@@ -4,6 +4,9 @@ metadata:
   name: smoke-test-client
   labels:
     app.kubernetes.io/name: smoke-test-client
+    owner: platform-team
+    cost-center: training
+    environment: lab
 spec:
   restartPolicy: Always
   containers:
@@ -13,3 +16,10 @@ spec:
         - sh
         - -c
         - sleep 3600
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          cpu: 50m
+          memory: 64Mi

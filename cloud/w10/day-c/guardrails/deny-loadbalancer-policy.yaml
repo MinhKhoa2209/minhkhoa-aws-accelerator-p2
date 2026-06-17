@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: w10-deny-unapproved-loadbalancer
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["services"]
+        scope: "Namespaced"
+  validations:
+    - expression: >-
+        !has(object.spec.type) ||
+        object.spec.type != 'LoadBalancer' ||
+        (
+          has(object.metadata.annotations) &&
+          'platform.aws.accelerator/allow-load-balancer' in object.metadata.annotations &&
+          object.metadata.annotations['platform.aws.accelerator/allow-load-balancer'] == 'true'
+        )
+      message: "LoadBalancer services need an explicit platform exception"

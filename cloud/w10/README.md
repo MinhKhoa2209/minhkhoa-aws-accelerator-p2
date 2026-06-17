@@ -40,3 +40,17 @@ Day 2 đã scaffold và kiểm tra artifact cho:
 - template exception CVE có owner và ngày hết hạn
 
 Thực hành tại [`day-b/README.md`](day-b/README.md).
+
+## Day 3
+
+Day 3 đã scaffold và kiểm tra artifact cho:
+
+- ResourceQuota giới hạn CPU, memory, Pod và Service LoadBalancer
+- LimitRange đặt default request/limit cho container
+- PodDisruptionBudget giữ `announcement-app` còn ít nhất một replica khả dụng
+- ValidatingAdmissionPolicy bắt buộc `owner`, `cost-center`, `environment`
+- ValidatingAdmissionPolicy chặn Service `LoadBalancer` nếu không có exception
+- Argo CD Application mẫu để đưa guardrails vào GitOps
+- runbook xử lý rollout/SLO incident và chi phí tăng bất thường
+
+Thực hành tại [`day-c/README.md`](day-c/README.md).

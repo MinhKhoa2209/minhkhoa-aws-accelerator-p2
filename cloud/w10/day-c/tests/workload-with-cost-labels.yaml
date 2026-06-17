@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: day-c-cost-label-pass
+  namespace: w8-day-2
+  labels:
+    owner: platform-team
+    cost-center: training
+    environment: lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: day-c-cost-label-pass
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: day-c-cost-label-pass
+        owner: platform-team
+        cost-center: training
+        environment: lab
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi

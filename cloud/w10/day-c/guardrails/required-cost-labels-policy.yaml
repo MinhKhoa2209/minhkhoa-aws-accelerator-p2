@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: w10-required-cost-labels
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+        scope: "Namespaced"
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["deployments", "statefulsets", "daemonsets"]
+        scope: "Namespaced"
+      - apiGroups: ["argoproj.io"]
+        apiVersions: ["v1alpha1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["rollouts"]
+        scope: "Namespaced"
+  validations:
+    - expression: >-
+        has(object.metadata.labels) &&
+        'owner' in object.metadata.labels &&
+        object.metadata.labels['owner'] != '' &&
+        'cost-center' in object.metadata.labels &&
+        object.metadata.labels['cost-center'] != '' &&
+        'environment' in object.metadata.labels &&
+        object.metadata.labels['environment'] in ['lab', 'dev', 'staging', 'prod']
+      message: "workloads must define owner, cost-center and environment labels"

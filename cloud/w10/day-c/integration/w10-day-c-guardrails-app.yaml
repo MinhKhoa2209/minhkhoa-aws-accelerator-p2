@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: w10-day-c-guardrails
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/MinhKhoa2209/minhkhoa-aws-accelerator-p2.git
+    targetRevision: main
+    path: cloud/w10/day-c/guardrails
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: w8-day-2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

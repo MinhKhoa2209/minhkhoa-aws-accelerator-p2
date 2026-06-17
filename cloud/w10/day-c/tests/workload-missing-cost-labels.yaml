@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: day-c-cost-label-fail
+  namespace: w8-day-2
+  labels:
+    owner: platform-team
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: day-c-cost-label-fail
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: day-c-cost-label-fail
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80

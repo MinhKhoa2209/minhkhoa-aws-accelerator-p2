@@ -75,3 +75,42 @@
 ### Commit
 
 - [ ] `[W10-D2] secrets supply chain security`
+
+## D3 - Platform Integration, Runbook và Cost Guard
+
+### Self-study
+
+- [x] Hiểu platform integration giữa GitOps, rollout, observability và security.
+- [x] Hiểu ResourceQuota dùng để giới hạn tổng tài nguyên namespace.
+- [x] Hiểu LimitRange dùng để đặt default request/limit cho container.
+- [x] Hiểu PodDisruptionBudget bảo vệ availability khi node drain.
+- [x] Hiểu vì sao workload cần `owner`, `cost-center`, `environment`.
+- [x] Hiểu vì sao Service `LoadBalancer` cần exception có owner và ngày hết hạn.
+- [x] Phân biệt Argo Rollouts abort và Git revert.
+- [x] Biết cấu trúc runbook xử lý incident và cost response.
+
+### Thực hành
+
+- [x] Tạo ResourceQuota cho namespace `w8-day-2`.
+- [x] Tạo LimitRange default request/limit cho container.
+- [x] Tạo PodDisruptionBudget cho `announcement-app`.
+- [x] Viết ValidatingAdmissionPolicy bắt buộc label chi phí.
+- [x] Viết ValidatingAdmissionPolicy chặn LoadBalancer chưa được duyệt.
+- [x] Tạo Argo CD Application mẫu cho Day C guardrails.
+- [x] Tạo workload hợp lệ và không hợp lệ để kiểm thử admission.
+- [x] Viết runbook incident response.
+- [x] Viết runbook cost response.
+- [x] Viết script kiểm tra nhanh artifact Day C.
+
+### Evidence cần hoàn thành trên cluster
+
+- [x] `kubectl kustomize cloud/w10/day-c/guardrails` render thành công.
+- [ ] ResourceQuota, LimitRange và PodDisruptionBudget tồn tại trong `w8-day-2`.
+- [ ] Workload thiếu label chi phí bị reject.
+- [ ] Service `LoadBalancer` không có exception bị reject.
+- [ ] Argo CD Application `w10-day-c-guardrails` sync guardrails.
+- [x] Runbook mô tả rõ khi nào abort rollout và khi nào Git revert.
+
+### Commit
+
+- [ ] `[W10-D3] platform integration runbook cost guard`

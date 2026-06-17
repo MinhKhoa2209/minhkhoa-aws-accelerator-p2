@@ -1,0 +1,13 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: w10-required-cost-labels
+spec:
+  policyName: w10-required-cost-labels
+  validationActions:
+    - Deny
+    - Audit
+  matchResources:
+    namespaceSelector:
+      matchLabels:
+        platform.aws.accelerator/guardrails: "enabled"

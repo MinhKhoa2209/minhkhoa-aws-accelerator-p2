@@ -3,6 +3,10 @@ kind: Rollout
 metadata:
   name: announcement-app
   namespace: w8-day-2
+  labels:
+    owner: platform-team
+    cost-center: training
+    environment: lab
 spec:
   replicas: 2
   revisionHistoryLimit: 3
@@ -15,6 +19,9 @@ spec:
         gitops-lab/retry-reason: analysis-template-empty-result-fix-2026-06-08
       labels:
         app.kubernetes.io/name: announcement-app
+        owner: platform-team
+        cost-center: training
+        environment: lab
     spec:
       containers:
         - name: web
