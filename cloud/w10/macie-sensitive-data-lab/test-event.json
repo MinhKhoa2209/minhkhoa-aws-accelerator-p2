@@ -1,0 +1,60 @@
+{
+  "version": "0",
+  "id": "test-event-12345",
+  "detail-type": "Macie Finding",
+  "source": "aws.macie",
+  "account": "058114477594",
+  "time": "2026-06-19T09:30:00Z",
+  "region": "us-east-1",
+  "resources": [],
+  "detail": {
+    "schemaVersion": "1.0",
+    "id": "test-finding-id",
+    "accountId": "058114477594",
+    "region": "us-east-1",
+    "type": "SensitiveData:S3Object/Personal",
+    "title": "TEST: Sensitive data discovered in S3 object",
+    "description": "This is a test event to verify EventBridge → SNS → Email pipeline is working",
+    "severity": {
+      "score": 5,
+      "description": "Medium"
+    },
+    "createdAt": "2026-06-19T09:30:00Z",
+    "updatedAt": "2026-06-19T09:30:00Z",
+    "count": 1,
+    "resourcesAffected": {
+      "s3Bucket": {
+        "name": "xbrain-macie-sensitive-data-058114477594",
+        "arn": "arn:aws:s3:::xbrain-macie-sensitive-data-058114477594"
+      },
+      "s3Object": {
+        "key": "sample-data/customer-records-fake.txt"
+      }
+    },
+    "category": "CLASSIFICATION",
+    "classificationDetails": {
+      "result": {
+        "status": {
+          "code": "COMPLETE"
+        },
+        "sensitiveData": [
+          {
+            "category": "PERSONAL_INFORMATION",
+            "detections": [
+              {
+                "count": 10,
+                "type": "USA_SOCIAL_SECURITY_NUMBER"
+              },
+              {
+                "count": 5,
+                "type": "CREDIT_CARD_NUMBER"
+              }
+            ],
+            "totalCount": 15
+          }
+        ]
+      }
+    },
+    "sample": false
+  }
+}

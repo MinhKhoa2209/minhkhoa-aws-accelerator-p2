@@ -1,0 +1,17 @@
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfvars
+!terraform/terraform.tfvars.example
+terraform/.terraform.lock.hcl
+
+# Evidence screenshots (add your screenshots here)
+evidence/*.png
+evidence/*.jpg
+!evidence/SCREENSHOTS_NEEDED.md
+
+# Temp files
+.tmp/
+*.log
+

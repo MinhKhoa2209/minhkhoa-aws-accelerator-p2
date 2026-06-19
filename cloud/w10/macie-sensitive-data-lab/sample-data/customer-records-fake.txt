@@ -1,0 +1,19 @@
+FAKE TRAINING DATA - DO NOT USE REAL CUSTOMER DATA
+
+This file intentionally contains fake PII-like values for Amazon Macie training.
+The records below are synthetic and must not be treated as real personal data.
+
+Record 001
+Name: Jane Example
+Email: jane.example@example.com
+Phone: +1-202-555-0147
+SSN: 123-45-6789
+Credit Card: 4111 1111 1111 1111
+
+Record 002
+Name: John Training
+Email: john.training@example.net
+Phone: +1-202-555-0199
+SSN: 987-65-4320
+Credit Card: 5500 0000 0000 0004
+
