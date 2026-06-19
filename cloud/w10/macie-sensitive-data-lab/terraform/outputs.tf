@@ -30,5 +30,5 @@ output "macie_status" {
 
 output "instructions" {
   description = "Next steps"
-  value = var.notification_email != "" ? "Check email ${var.notification_email} and confirm SNS subscription. Then wait 5-10 minutes for Macie job to complete." : "No email configured. Check Macie findings in AWS Console after 5-10 minutes."
+  value       = var.notification_email != "" ? "Check email ${var.notification_email} and confirm SNS subscription. Then wait 5-10 minutes for Macie job to complete." : "No email configured. Check Macie findings in AWS Console after 5-10 minutes."
 }

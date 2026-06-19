@@ -14,19 +14,9 @@ Nếu gặp lỗi `SubscriptionRequiredException`, xem hướng dẫn: **[ACCOUN
 Sample files -> S3 bucket -> Macie Job -> Findings -> EventBridge -> SNS -> Email
 ```
 
-## Evidence - Yêu Cầu Bài Tập
+## Evidence
 
-Theo đề bài, cần chụp **2 ảnh**:
-
-### 1. Macie Findings
-![Macie Findings](./evidence/01-macie-findings.png)
-*Kết quả detect sensitive data trong S3*
-
-### 2. Email Alert
-![Email Alert](./evidence/02-email-alert.png)
-*Email cảnh báo nhận được từ SNS*
-
-📸 Xem hướng dẫn chi tiết: [evidence/SCREENSHOTS_NEEDED.md](./evidence/SCREENSHOTS_NEEDED.md)
+Kết quả kiểm tra lab được ghi tại [evidence/evidence-pack.md](./evidence/evidence-pack.md).
 
 ## Setup với Terraform
 
@@ -57,26 +47,11 @@ Macie job mất 5-10 phút. Check findings tại:
 https://console.aws.amazon.com/macie/home?region=us-east-1#findings
 ```
 
-### 5. Take screenshots
+### 5. Verify evidence
 
-Chụp 2 ảnh theo hướng dẫn: [evidence/SCREENSHOTS_NEEDED.md](./evidence/SCREENSHOTS_NEEDED.md)
+Kiểm tra kết quả Macie finding và SNS/EventBridge trong [evidence/evidence-pack.md](./evidence/evidence-pack.md).
 
 Xem chi tiết: [terraform/README.md](./terraform/README.md)
-
-## Nộp Bài
-
-1. Chụp 2 ảnh và đặt vào `evidence/`:
-   - `01-macie-findings.png`
-   - `02-email-alert.png`
-
-2. Push lên GitHub:
-   ```bash
-   git add evidence/*.png
-   git commit -m "Add Macie lab evidence"
-   git push
-   ```
-
-3. Nộp link GitHub vào form
 
 ## Cleanup
 
@@ -93,4 +68,3 @@ terraform destroy
   ```bash
   aws macie2 disable-macie --region us-east-1
   ```
-

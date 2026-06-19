@@ -37,10 +37,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "macie_test" {
 
 # Upload sample sensitive data file
 resource "aws_s3_object" "sample_data" {
-  bucket  = aws_s3_bucket.macie_test.id
-  key     = "sample-data/customer-records-fake.txt"
-  source  = "../sample-data/customer-records-fake.txt"
-  etag    = filemd5("../sample-data/customer-records-fake.txt")
+  bucket = aws_s3_bucket.macie_test.id
+  key    = "sample-data/customer-records-fake.txt"
+  source = "../sample-data/customer-records-fake.txt"
+  etag   = filemd5("../sample-data/customer-records-fake.txt")
 
   server_side_encryption = "AES256"
 
